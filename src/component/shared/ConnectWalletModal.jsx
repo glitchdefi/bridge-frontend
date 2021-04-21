@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import WalletExtensionUtils from "../../utils/walletExtensionUtils";
-import { buyIdoContractState, extensionName } from "../../constants/values";
+import { extensionName } from "../../constants/values";
 import {
     isMetamaskAvailable,
     isBinanceExtensionAvailable,
     isTrustWalletAvailable,
-    calculateBalanceSend,
 } from "../../utils/utils";
 import { actAlertMsgWarning } from '../../redux/action';
 import { useDispatch, useSelector } from 'react-redux';
 import { ACTION_CONST } from '../../constants';
-import { isMobile } from 'web3modal';
 import { get } from 'lodash';
-// import { getKYC } from '../../redux/services/kyc.api'
+
 
 
 
@@ -23,10 +21,8 @@ const ConnectWalletModal = (props) => {
     const [hasMetamask, setHasMetamask] = useState(false);
     const [hasTrustWallet, setHasTrustWallet] = useState(false);
     const [hasBinanceWallet, setHasBinanceWallet] = useState(false);
-    // const [currentNetWork, setCurrentNetWork] = useState("ethereum");
     const currentNetWork = useSelector((state) => get(state, "wallet.currentInputNetwork", "eth"));
-    // const [isSigning, setIsSigning] = useState(false);
-    // const [extension, setExtension] = useState(null);
+
 
 
     useEffect(() => {
@@ -46,7 +42,6 @@ const ConnectWalletModal = (props) => {
     };
 
 
-    // console.log("currentNetWork==>", currentNetWork);
 
     const connectWithExtension = async (extensionName) => {
 
@@ -54,33 +49,27 @@ const ConnectWalletModal = (props) => {
         const temp = new WalletExtensionUtils(extensionName);
         //Connect action
         await temp.connect(currentNetWork);
+        
         if (temp.checkWrongNetwork()) {
 
             dispatch(
                 actAlertMsgWarning(
 
-                    `Wrong network! You need connect to ${currentNetWork==="eth"?"Ethereum network":"Binance smart chain network"}!`
-                    
+                    `Wrong network! You need connect to ${currentNetWork === "eth" ? "Ethereum network" : "Binance smart chain network"}!`
+
                 )
             );
             return;
         }
 
-        //Show Block UI
-        dispatch({
-            type: ACTION_CONST.REQUEST_SUBMIT
-        })
-
-
-        //Disable Block UI
-        dispatch({
-            type: ACTION_CONST.REQUEST_DONE
-        })
-
 
         dispatch({
             type: ACTION_CONST.ENABLE_WALLET_SUCCESS,
             data: temp
+        })
+        dispatch({
+            type: ACTION_CONST.CURRENT_NET_WORK_EXTENSION,
+            data: temp.getCurrentChainId()
         })
 
 
@@ -112,8 +101,8 @@ const ConnectWalletModal = (props) => {
         //if chain ID
         try {
             temp.chainChanged(async (chanId) => {
-                // debugger
-                await temp.connect(currentNetWork);
+             
+                 await temp.connect(currentNetWork);
                 if (temp.checkWrongNetwork()) {
 
                     dispatch(
@@ -126,6 +115,11 @@ const ConnectWalletModal = (props) => {
                 dispatch({
                     type: ACTION_CONST.ENABLE_WALLET_SUCCESS,
                     data: temp
+                })
+                
+                dispatch({
+                    type: ACTION_CONST.CURRENT_NET_WORK_EXTENSION,
+                    data: temp.getCurrentChainId()
                 })
 
                 await getBalanceAndAddress(temp);
@@ -147,7 +141,7 @@ const ConnectWalletModal = (props) => {
             type: ACTION_CONST.CONNECT_WALLET_SUCCESS,
             data: walletAddress
         })
-       
+
 
     };
 
@@ -169,7 +163,7 @@ const ConnectWalletModal = (props) => {
                                         getExtension().metamask
                                     )
                                 }}>
-                                    <img src="/images/metamask.svg" width="30px" className="me-2" />
+                                    <img src="/images/metamask.svg" width="30px" className="me-2" alt="metamask" />
                                     <div className="text-dark">
                                         Metamask - <span className="font-weight-bold">Desktop</span>
                                     </div>
@@ -182,7 +176,7 @@ const ConnectWalletModal = (props) => {
                                             getExtension().binanceExtension
                                         )
                                     }}>
-                                    <img src="/images/binance-extension.svg" width="30px" className="me-2" />
+                                    <img src="/images/binance-extension.svg" width="30px" className="me-2" alt="binance" />
                                     <div className="text-dark">
                                         Binance Chain Wallet
                              </div>
@@ -197,7 +191,7 @@ const ConnectWalletModal = (props) => {
                                             getExtension().trustWallet
                                         )
                                     }}>
-                                    <img src="/images/trust_platform.png" width="30px" className="me-2" />
+                                    <img src="/images/trust_platform.png" width="30px" className="me-2" alt="trust_platform" />
                                     <div className="text-dark">
                                         Trust Wallet
                                 </div>

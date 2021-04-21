@@ -7,6 +7,7 @@ import { calculateBalanceSend, } from "./utils";
 import {helpers} from './helpers'
 
 import { BigNumber } from "bignumber.js";
+import exactMath from 'exact-math';
 import { CHAIN_ID } from "../constants";
 import {
   BLOCKCHAIN_NETWORK,
@@ -33,6 +34,7 @@ export default class WalletExtensionUtils {
   async connect(currentInputNetWork) {
     console.log("CONNECT BLOCKCHAIN_NETWORK==>", BLOCKCHAIN_NETWORK);
     let self = this;
+    
     if (self.extensionName === extensionName.binanceExtension) {
       if (window.BinanceChain) {
         self.extension = window.BinanceChain;
@@ -46,11 +48,7 @@ export default class WalletExtensionUtils {
               Web3.utils.numberToHex(CHAIN_ID.ETH[BLOCKCHAIN_NETWORK])
           );
 
-          debugger;
-          // console.log("window.ethereum.chainId==>", window.ethereum.chainId);
-          // console.log("Web3.utils.numberToHex(chainId.bscTestnet)==>", Web3.utils.numberToHex(chainId.bscTestnet));
-
-          console.log(envCheck);
+  
           if (envCheck) {
             self.isWrongNetwork = true;
             return;
@@ -64,6 +62,8 @@ export default class WalletExtensionUtils {
           self.web3 = null;
         }
       } else throw new Error("Detect Binance Extension failed!");
+
+      return window.BinanceChain.chainId;
     } else if (
       self.extensionName === extensionName.metamask ||
       self.extensionName === extensionName.trustWallet
@@ -119,7 +119,11 @@ export default class WalletExtensionUtils {
           self.web3 = null;
         }
       } else throw new Error("Detect Wallet failed!");
+
+      return window.ethereum.chainId 
     }
+
+    
   }
 
   accountsChanged(callback) {
@@ -155,10 +159,7 @@ export default class WalletExtensionUtils {
     return Number(window.ethereum.networkVersion);
   }
 
-  //get current account
-  getCurrentAddress() {
-    return this.address;
-  }
+
 
   async getTokenBalance(tokenAddress) {
     const tokenContract = new this.web3.eth.Contract(erc20Abi, tokenAddress);
@@ -166,9 +167,7 @@ export default class WalletExtensionUtils {
     const tokenBalance = await tokenContract.methods
       .balanceOf(this.address)
       .call();
-
-    // console.log(tokenBalance)
-    return parseFloat(tokenBalance / 10 ** 18);
+    return exactMath.div(tokenBalance, exactMath.pow(10, 18))
   }
 
   async getGlitchBalance() {
@@ -181,7 +180,7 @@ export default class WalletExtensionUtils {
       return glitchBalance;
     } catch (error) {
       console.log(error);
-      return null;
+      return 0;
     }
   }
 
@@ -348,30 +347,6 @@ export default class WalletExtensionUtils {
   }
 
 
-  async getGlitchBalance() {
-    const glitchAddress = CHAIN_IDS.eth.includes(this.getCurrentChainId())
-      ? ETH_GLITCH_ADDRESS
-      : BSC_GLITCH_ADDRESS;
-    const glitchBalance = await this.getTokenBalance(glitchAddress);
-    return helpers.formatNumberDownRound(glitchBalance,6)
-    // return glitchBalance;
-  }
-
-  getCurrentChainId() {
-    return Number(window.ethereum.networkVersion);
-  }
-
-  async getAllowance(tokenAddress, contractAddress) {
-    const tokenContract = new this.web3.eth.Contract(erc20Abi, tokenAddress);
-    // const tokenContract = new this.web3.eth.Contract(abiContract, contractAddress);
-    // console.log("this.address==>", this.address);
-    const allocationNumber = await tokenContract.methods
-      .allowance(this.address, contractAddress)
-      .call();
-
-    return parseFloat(allocationNumber / 10 ** 18);
-  }
-
   calculateSendAmount(amount) {
     return this.web3.utils.toWei(amount.toString(), "ether");
   }
@@ -381,12 +356,11 @@ export default class WalletExtensionUtils {
   }
 
   async getBalanceAccount (){
-   const symbol =  CHAIN_IDS.eth.includes(this.getCurrentChainId())?"ETH":"BNB"
+   const symbol =  CHAIN_IDS.eth.includes(this.getCurrentChainId())?" ETH":" BNB"
     const balance = await this.web3.eth.getBalance(this.address)
      return helpers.formatNumberDownRound(this.fromWei(balance),6)  + symbol
     
   }
 }
 
-// getTokenBalance('0x083c478DB9289a91b4d20D0f86716aF4371872Ef')
-// console.log(new WalletExtensionUtils("METAMASK"));
+

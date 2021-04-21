@@ -31,7 +31,7 @@ export default function NetworkInputPanel({
                     )}
                     <img
                         height="40"
-                        src={`/images/networks/${currentNetwork.id}-icon.svg`}
+                        src={`/images/networks/${currentNetwork.id}-icon.svg` } alt="network"
                     />
                     <div className="p-network-name">
                         <span className="pe-md-1 pe-0">{currentNetwork.name}</span>
@@ -48,9 +48,7 @@ export default function NetworkInputPanel({
                                 className="network-dropdown-menu dropdown-menu dropdown-menu-end"
                                 aria-labelledby="dropdownMenuNetwork1"
                             >
-                                {/* <li><a className="dropdown-item" href="#">Ethereum Network <i className="ms-2 mdi mdi-check text-warning"></i></a></li>
-                                <li><a className="dropdown-item" href="#">Binance Chain Network</a></li>
-                                <li><a className="dropdown-item disabled" href="#">Binance Smart Chain Network</a></li> */}
+                            
                                 {networkList.map((value) => {
                                     return (
                                         <li key={value.id}>

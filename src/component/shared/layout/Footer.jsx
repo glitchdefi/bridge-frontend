@@ -1,8 +1,7 @@
 import React from 'react';
 import ConnectWalletModal from '../ConnectWalletModal';
 import WalletModal from '../WalletModal';
-import { Link } from "react-router-dom";
-import { ROUTES } from "../../../constants";
+
 
 
 export default function Footer() {
@@ -41,6 +40,7 @@ export default function Footer() {
         </div>
       </div>
       <ConnectWalletModal />
+
       <WalletModal/>
     
     </>

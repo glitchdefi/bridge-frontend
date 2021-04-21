@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { get } from 'lodash';
 import { useSelector } from 'react-redux';
-import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 export default function AmountInputPanel({ label, onAmountChange, tokenName }) {
   const [amount, setAmount] = useState(0);
@@ -10,23 +9,11 @@ export default function AmountInputPanel({ label, onAmountChange, tokenName }) {
   const isConnectWallet = useSelector((state) =>
     get(state, 'utils.isConnectWallet', false)
   );
-  const walletUtils = useSelector((state) =>
-    get(state, 'utils.walletUtils', null)
-  );
-  const walletAddress = useSelector((state) =>
-    get(state, "utils.walletAddress", "")
-  );
+
   const glitchBalance = useSelector((state) =>
     get(state, "utils.glitchBalance", 0)
   );
-  const ethSwapFee = useSelector((state) =>
-    get(state, "utils.ethSwapFee", 0)
-  );
-  const bscSwapFee = useSelector((state) =>
-    get(state, "utils.bscSwapFee", 0)
-  );
 
-  const currentNetWork = useSelector((state) => get(state, "wallet.currentInputNetwork", ""));
 
   useEffect(() => {
     setAmount(0);
@@ -73,16 +60,6 @@ export default function AmountInputPanel({ label, onAmountChange, tokenName }) {
           </OverlayTrigger> */}
         </div>
       </div>
-      {/* <div className="font-14 d-flex align-items-center">
-        <span className="text-purple me-2">You will receive</span>
-        <img className="mx-2" height="12" src="/images/tokens/bnb.png" />{' '}
-        {`${amount || 0} ${tokenName}`}
-        <span className="badge ms-2 p-coin-tag">{currentNetWork === "eth" ? "BEP20" : "ERC20"}</span>
-      </div>
-      <div className="font-14 d-flex align-items-center">
-        <span className="text-purple me-2">Swap fee:</span>
-        {`${currentNetWork === "eth" ? ethSwapFee || 0 : bscSwapFee || 0} ${currentNetWork === "eth" ? "ETH" : "BNB"} `}
-      </div> */}
     </>
   );
 }

@@ -9,5 +9,5 @@ module.exports = {
         'https://ropsten.infura.io/v3/f2473914890349138c8b03e3ef79d165/',
     ETH_GLITCH_ADDRESS: '0x5aa682db6cbe27e0ca0ee2a31948e6000222606b',
     ETH_BRIDGE_CONTRACT_ADDRESS: '0x4e6bffa285c8a64df224aab632a75990508b1763',
-    BACK_END_URL: 'http://54.179.205.192:3000'
+    BACK_END_URL: 'https://uat-bridge.glitch.finance'
 };

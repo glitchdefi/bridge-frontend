@@ -1,10 +1,9 @@
-import { fromPairs, get, isEmpty } from "lodash";
+import { get } from "lodash";
 import React, { useEffect, useState } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, } from "react-router-dom";
 import { isMobile } from "web3modal";
-import { ACTION_CONST, ROUTES, TOKEN_NAME } from "../../../constants";
-// import { getKYC } from "../../../redux/services/kyc.api";
+import { ACTION_CONST, ROUTES, } from "../../../constants";
 import { helpers } from "../../../utils/helpers";
 
 const Header = (props) => {
@@ -16,7 +15,7 @@ const Header = (props) => {
   const walletAddress = useSelector((state) => get(state, "utils.walletAddress", false));
   const walletUtils = useSelector((state) => get(state, "utils.walletUtils", null));
   const currentNetWork = useSelector((state) => get(state, "wallet.currentInputNetwork", "eth"));
-
+  const currentNetWorkId = useSelector((state) => get(state, "wallet.currentNetWorkId", ""));
   const [glitchBalance, setGlitchBalance] = useState(0);
   const [init, setInit] = useState(true);
 
@@ -35,13 +34,13 @@ const Header = (props) => {
           type: ACTION_CONST.GET_GLITCH_BALANCE,
           data
         })
-        
-        walletUtils.getBalanceAccount().then(balance => {
-          setAmountBalance(balance)
-        }).catch(err => console.log(err));
 
-        
       })
+
+      walletUtils.getBalanceAccount().then(balance => {
+        setAmountBalance(balance)
+
+      }).catch(err => console.log(err));
       if (currentNetWork === "eth") {
 
 
@@ -54,7 +53,7 @@ const Header = (props) => {
       }
       if (currentNetWork == "bsc") {
 
-      
+
 
         walletUtils.getBscSwapFee().then(data => {
           dispatch({
@@ -65,9 +64,10 @@ const Header = (props) => {
       }
 
 
-      setInit(false)
+
       if (init) {
-        setInterval(() => {
+        setInit(false)
+        const job = setInterval(() => {
           walletUtils.getGlitchBalance().then(data => {
             setGlitchBalance(data)
 
@@ -77,11 +77,19 @@ const Header = (props) => {
               data
             })
           })
-        }, 5000);
+          walletUtils.getBalanceAccount().then(balance => {
+            setAmountBalance(balance)
+
+          }).catch(err => console.log(err));
+
+        }, 5 * 1000);
+        // set reducer getbalance
+        dispatch({ type: ACTION_CONST.SET_JOB_GET_BALANCE, data: job })
       }
 
+     
     }
-  }, [dispatch, init, isConnectWallet, walletUtils, currentNetWork])
+  }, [isConnectWallet, walletUtils, currentNetWorkId])
 
 
 
@@ -91,7 +99,7 @@ const Header = (props) => {
       <nav id="PPNavbar" className="navbar navbar-expand-md navbar-light bg-white">
         <div className="container">
           <Link className="navbar-brand d-flex align-items-center" to={ROUTES.HOMEPAGE}>
-            <img src="/images/logo.png" height="27" alt="GLITCH" className="me-2" />GLITCH
+            <img src="/images/logo.jpg" height="27" alt="GLITCH" className="me-2" />GLITCH
           </Link>
           {isMobile() &&
             <div className="d-flex align-items-center" style={{ flexWrap: 'nowrap' }}>
@@ -134,10 +142,10 @@ const Header = (props) => {
                     <li className="nav-item me-2 mb-2 mb-md-0">
                       <span className="btn btn-primary btn-purple btn-sm me-2"><b>{glitchBalance}</b> GLITCH</span>
                       {currentNetWork === "eth" &&
-                        <span className="btn btn-primary btn-purple btn-sm"><b>{amountBalance}</b> ETH</span>
+                        <span className="btn btn-primary btn-purple btn-sm"><b>{amountBalance}</b></span>
                       }
                       {currentNetWork === "bsc" &&
-                        <span className="btn btn-primary btn-purple btn-sm"><b>{amountBalance}</b> BNB</span>
+                        <span className="btn btn-primary btn-purple btn-sm"><b>{amountBalance}</b></span>
                       }
 
                     </li>

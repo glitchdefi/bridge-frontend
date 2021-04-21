@@ -3,12 +3,12 @@ import { BACK_END_URL } from "../../_configs";
 
 export const getStatusSwap = async (network, txid) => {
   try {
-    debugger
+
     const result = await axios.get(
       `${BACK_END_URL}/api/bridge?network=${network}&txid=${txid}`
     );
-    console.log(result);
-    if (result.status == 200) {
+    // console.log(result);
+    if (result.status === 200) {
       return result.data.data;
     }
 

@@ -8,19 +8,11 @@ import Card from '../../component/Card';
 import Column from '../../component/Column';
 import Container from '../../component/Container';
 import Row from '../../component/Row';
-import { NETWORK_LIST, CHAIN_IDS, TOKEN_NAME } from '../../constants';
+import { NETWORK_LIST, TOKEN_NAME } from '../../constants';
 import { ACTION_CONST } from '../../constants';
 import Particles from 'react-particles-js';
 
-import {
-    BSC_GLITCH_ADDRESS,
-    ETH_GLITCH_ADDRESS,
-    BSC_BRIDGE_CONTRACT_ADDRESS,
-    ETH_BRIDGE_CONTRACT_ADDRESS,
-    ETH_EXPLORER,
-    BSC_EXPLORER
-} from '../../_configs';
-import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import StepModal from './StepModal';
 
 const BridgePortalPage = (props) => {
@@ -45,167 +37,7 @@ const BridgePortalPage = (props) => {
         })
     }, [inputNetwork])
 
-    // const handleSwapButtonClick = () => {
-    //     document.getElementById('')
-    //     if (walletUtils) {
-    //         if (inputNetwork.id === 'bsc' && outputNetwork.id === 'eth') {
-    //             if (!CHAIN_IDS.bsc.includes(walletUtils.getCurrentChainId())) {
-    //                 dispatch({
-    //                     type: ACTION_CONST.ALERT_FAILS,
-    //                     message: 'Wrong network!',
-    //                 });
-
-    //                 return;
-    //             }
-
-    //             dispatch({
-    //                 type: ACTION_CONST.REQUEST_SUBMIT,
-    //             });
-    //             walletUtils.approve(
-    //                 {
-    //                     tokenContractAddress: BSC_GLITCH_ADDRESS,
-    //                     contractAddress: BSC_BRIDGE_CONTRACT_ADDRESS,
-    //                     amount: amount,
-    //                 },
-    //                 (data) => {
-    //                     if (data.status === 'APPROVED') {
-    //                         dispatch({
-    //                             type: ACTION_CONST.ALERT_SUCCESS,
-    //                             message: 'Approve Tokens successfully!',
-    //                         });
-    //                         walletUtils.swapBSCtoETH(
-    //                             {
-    //                                 amount: amount,
-    //                             },
-    //                             (result) => {
-    //                                 if (
-    //                                     result.status ===
-    //                                     'SWAP_BSC_TO_ETH_SUCCESS'
-    //                                 ) {
-    //                                     dispatch({
-    //                                         type: ACTION_CONST.REQUEST_DONE,
-    //                                     });
-
-    //                                     //set value 0 
-    //                                     setAmount(0);
-
-    //                                     //alert notify with link
-    //                                     dispatch({
-
-    //                                         type: ACTION_CONST.ALERT_LINK,
-    //                                         alertType: "success",
-    //                                         alertUrl: `${BSC_EXPLORER}/tx/${result.txID}`,
-    //                                         alertMessage: `Swap successfully with txID ${result.txID}`,
-
-    //                                     })
-    //                                 }
-    //                                 if (
-    //                                     result.status === 'SWAP_BSC_TO_ETH_FAIL'
-    //                                 ) {
-    //                                     dispatch({
-    //                                         type: ACTION_CONST.REQUEST_DONE,
-    //                                     });
-    //                                     dispatch({
-    //                                         type: ACTION_CONST.ALERT_FAILS,
-    //                                         message: 'Swap fail!',
-    //                                     });
-    //                                 }
-    //                             }
-    //                         );
-    //                     }
-    //                     if (data.status === 'APPROVE_FAILS') {
-    //                         dispatch({
-    //                             type: ACTION_CONST.REQUEST_DONE,
-    //                         });
-    //                         dispatch({
-    //                             type: ACTION_CONST.ALERT_FAILS,
-    //                             message: 'Failed to Approve Tokens!',
-    //                         });
-    //                     }
-    //                 }
-    //             );
-    //         } else if (inputNetwork.id === 'eth' && outputNetwork.id === 'bsc') {
-    //             if (!CHAIN_IDS.eth.includes(walletUtils.getCurrentChainId())) {
-    //                 dispatch({
-    //                     type: ACTION_CONST.ALERT_FAILS,
-    //                     message: 'Wrong network!',
-    //                 });
-
-    //                 return;
-    //             }
-
-    //             dispatch({
-    //                 type: ACTION_CONST.REQUEST_SUBMIT,
-    //             });
-    //             walletUtils.approve(
-    //                 {
-    //                     tokenContractAddress: ETH_GLITCH_ADDRESS,
-    //                     contractAddress: ETH_BRIDGE_CONTRACT_ADDRESS,
-    //                     amount: amount,
-    //                 },
-    //                 (data) => {
-    //                     if (data.status === 'APPROVED') {
-    //                         dispatch({
-    //                             type: ACTION_CONST.ALERT_SUCCESS,
-    //                             message: 'Approve Tokens successfully!',
-    //                         });
-
-    //                         walletUtils.swapETHtoBSC(
-    //                             {
-    //                                 amount: amount,
-    //                             },
-    //                             (result) => {
-    //                                 if (
-    //                                     result.status ===
-    //                                     'SWAP_ETH_TO_BSC_SUCCESS'
-    //                                 ) {
-    //                                     dispatch({
-    //                                         type: ACTION_CONST.REQUEST_DONE,
-    //                                     });
-
-    //                                     //set value 0 
-    //                                     setAmount(0);
-
-
-    //                                     //alert with links
-    //                                     dispatch({
-
-    //                                         type: ACTION_CONST.ALERT_LINK,
-    //                                         alertType: "success",
-    //                                         alertUrl: `${ETH_EXPLORER}/tx/${result.txID}`,
-    //                                         alertMessage: `Swap successfully with txID ${result.txID}`,
-
-    //                                     })
-
-    //                                 }
-    //                                 if (
-    //                                     result.status === 'SWAP_ETH_TO_BSC_FAIL'
-    //                                 ) {
-    //                                     dispatch({
-    //                                         type: ACTION_CONST.REQUEST_DONE,
-    //                                     });
-    //                                     dispatch({
-    //                                         type: ACTION_CONST.ALERT_FAILS,
-    //                                         message: 'Swap fail!',
-    //                                     });
-    //                                 }
-    //                             }
-    //                         );
-    //                     }
-    //                     if (data.status === 'APPROVE_FAILS') {
-    //                         dispatch({
-    //                             type: ACTION_CONST.REQUEST_DONE,
-    //                         });
-    //                         dispatch({
-    //                             type: ACTION_CONST.ALERT_FAILS,
-    //                             message: 'Failed to Approve Tokens!',
-    //                         });
-    //                     }
-    //                 }
-    //             );
-    //         }
-    //     }
-    // };
+    
 
     const handleInputAmountChange = (value) => {
         setAmount(value);
@@ -240,7 +72,8 @@ const BridgePortalPage = (props) => {
             <Container>
                 <Row>
                     <Column>
-                        <h5 className="mb-3 d-flex align-items-center justify-content-center text-white font-20">GLITCH - BRIDGE <i data-bs-toggle="modal" data-bs-target="#stepModal" className="mdi mdi-information-outline ms-2 font-18"></i></h5>
+                        <h5 className="mb-3 d-flex align-items-center justify-content-center text-white font-20">GLITCH - BRIDGE 
+                        </h5>
                         <div className="font-13 text-white mb-3 text-center">
                             {/* The safe, fast and most secure way to bring
                             cross-chain assets to Glitch chains. */}

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { connect, useDispatch, useSelector } from "react-redux";
+import React from 'react';
+import {  useDispatch, useSelector } from "react-redux";
 import { ACTION_CONST } from "../../constants";
-import { fromPairs, get, isEmpty } from "lodash";
+import { get } from "lodash";
 import useCopyToClipboard from './CopyToClibboard';
 import { BSC_EXPLORER, ETH_EXPLORER } from '../../_configs';
 
