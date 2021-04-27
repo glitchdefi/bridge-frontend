@@ -17,11 +17,13 @@ export default function NetworkInputPanel({
         onNetworkChange(network);
     };
 
+    // console.log("currentNetwork===>", currentNetwork);
+
     return (
         <>
             <div className="p-form-group mb-3">
                 <label className="form-label p-main-text">{label}</label>
-                <div className="p-network">
+                <div className="p-network p-0">
                     {currentNetwork.badge && (
                         <span className="badge p-network-tag">
                             {currentNetwork.badge}
@@ -29,10 +31,10 @@ export default function NetworkInputPanel({
                     )}
                     <img
                         height="40"
-                        src={`/images/networks/${currentNetwork.id}-icon.svg`}
+                        src={`/images/networks/${currentNetwork.id}-icon.svg` } alt="network"
                     />
                     <div className="p-network-name">
-                        <span>{currentNetwork.name}</span>
+                        <span className="pe-md-1 pe-0">{currentNetwork.name}</span>
                         <div className="dropdown">
                             <a
                                 className="btn btn-sm btn-select-network dropdown-toggle"
@@ -46,9 +48,7 @@ export default function NetworkInputPanel({
                                 className="network-dropdown-menu dropdown-menu dropdown-menu-end"
                                 aria-labelledby="dropdownMenuNetwork1"
                             >
-                                {/* <li><a className="dropdown-item" href="#">Ethereum Network <i className="ms-2 mdi mdi-check text-warning"></i></a></li>
-                                <li><a className="dropdown-item" href="#">Binance Chain Network</a></li>
-                                <li><a className="dropdown-item disabled" href="#">Binance Smart Chain Network</a></li> */}
+                            
                                 {networkList.map((value) => {
                                     return (
                                         <li key={value.id}>
@@ -61,7 +61,7 @@ export default function NetworkInputPanel({
                                                 {value.name}
                                                 {value.name ===
                                                     currentNetwork.name && (
-                                                    <i className="ms-2 mdi mdi-check text-warning"></i>
+                                                    <i className="ms-2 mdi mdi-check text-info"></i>
                                                 )}
                                             </a>
                                         </li>

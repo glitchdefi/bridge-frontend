@@ -1,20 +1,20 @@
 import Web3 from "web3";
 import window from "global";
-import chainId from "../contracts/chainId";
 import erc20Abi from "../contracts/erc20.abi";
-import abiContract from "../contracts/bscpad.json";
-import ethSwapAbi from "../contracts/eth-swap.json";
-import bscSwapAbi from "../contracts/bsc-swap.json";
-import { calculateBalanceSend } from "./utils";
+import ethSwapAbi from "../contracts/ETHSwapAgent.json";
+import bscSwapAbi from "../contracts/BSCSwapAgent.json";
+import { calculateBalanceSend, } from "./utils";
+import {helpers} from './helpers'
+
 import { BigNumber } from "bignumber.js";
+import exactMath from 'exact-math';
+import { CHAIN_ID } from "../constants";
 import {
-    BLOCKCHAIN_NETWORK,
-    BSC_TOKEN_ADDRESS,
-    ETH_TOKEN_ADDRESS,
-    BSC_BRIDGE_CONTRACT_ADDRESS,
-    ETH_BRIDGE_CONTRACT_ADDRESS,
-    BSC_BRIDGE_FEE,
-    ETH_BRIDGE_FEE,
+  BLOCKCHAIN_NETWORK,
+  BSC_GLITCH_ADDRESS,
+  ETH_GLITCH_ADDRESS,
+  BSC_BRIDGE_CONTRACT_ADDRESS,
+  ETH_BRIDGE_CONTRACT_ADDRESS,
 } from "../_configs";
 import { CHAIN_IDS } from "../constants";
 
@@ -31,26 +31,24 @@ export default class WalletExtensionUtils {
     let self = this;
   }
 
-  async connect() {
+  async connect(currentInputNetWork) {
+    console.log("CONNECT BLOCKCHAIN_NETWORK==>", BLOCKCHAIN_NETWORK);
     let self = this;
+    
     if (self.extensionName === extensionName.binanceExtension) {
       if (window.BinanceChain) {
         self.extension = window.BinanceChain;
         self.web3 = new Web3(window.BinanceChain);
-        console.log("CONNECT BLOCKCHAIN_NETWORK==>", BLOCKCHAIN_NETWORK);
 
         try {
-          const envCheck =
-            BLOCKCHAIN_NETWORK === "TESTNET"
-              ? !(window.BinanceChain.chainId === Web3.utils.numberToHex(chainId.bscTestnet) ||
-                window.BinanceChain.chainId === Web3.utils.numberToHex(chainId.ethTestnet))
-              : !(window.BinanceChain.chainId === Web3.utils.numberToHex(chainId.bscMainnet) ||
-              window.BinanceChain.chainId === Web3.utils.numberToHex(chainId.ethMainnet))
+          const envCheck = !(
+            window.BinanceChain.chainId ===
+              Web3.utils.numberToHex(CHAIN_ID.BSC[BLOCKCHAIN_NETWORK]) ||
+            window.BinanceChain.chainId ===
+              Web3.utils.numberToHex(CHAIN_ID.ETH[BLOCKCHAIN_NETWORK])
+          );
 
-          // console.log("window.ethereum.chainId==>", window.ethereum.chainId);
-          // console.log("Web3.utils.numberToHex(chainId.bscTestnet)==>", Web3.utils.numberToHex(chainId.bscTestnet));
-
-          console.log(envCheck);
+  
           if (envCheck) {
             self.isWrongNetwork = true;
             return;
@@ -64,6 +62,8 @@ export default class WalletExtensionUtils {
           self.web3 = null;
         }
       } else throw new Error("Detect Binance Extension failed!");
+
+      return window.BinanceChain.chainId;
     } else if (
       self.extensionName === extensionName.metamask ||
       self.extensionName === extensionName.trustWallet
@@ -76,30 +76,35 @@ export default class WalletExtensionUtils {
         // console.log("window.ethereum enable");
         await window.ethereum.enable();
 
-        const envCheck =
-          BLOCKCHAIN_NETWORK === "TESTNET"
-            ? !(
-              window.ethereum.chainId ===
-              Web3.utils.numberToHex(chainId.bscTestnet) ||
-              window.ethereum.chainId === chainId.bscTestnet ||
-              window.ethereum.networkVersion === chainId.bscTestnet ||
-              window.ethereum.chainId ===
-              Web3.utils.numberToHex(chainId.ethTestnet) ||
-              window.ethereum.chainId === chainId.ethTestnet ||
-              window.ethereum.networkVersion === chainId.ethTestnet ||
-              (!window.ethereum.chainId && !window.ethereum.networkVersion)
-            )
-            : !(
-              window.ethereum.chainId ===
-              Web3.utils.numberToHex(chainId.bscMainnet) ||
-              window.ethereum.chainId === chainId.bscMainnet ||
-              window.ethereum.networkVersion === chainId.bscMainnet ||
-              window.ethereum.chainId ===
-              Web3.utils.numberToHex(chainId.ethMainnet) ||
-              window.ethereum.chainId === chainId.ethMainnet ||
-              window.ethereum.networkVersion === chainId.ethMainnet ||
-              (!window.ethereum.chainId && !window.ethereum.networkVersion)
-            );
+        //check current network
+        let envCheck;
+        if (
+          typeof currentInputNetWork === "string" &&
+          currentInputNetWork === "eth"
+        ) {
+          //connect with eth
+           envCheck =
+           !( window.ethereum.chainId ===
+              Web3.utils.numberToHex(CHAIN_ID.ETH[BLOCKCHAIN_NETWORK]) ||
+            window.ethereum.chainId === CHAIN_ID.ETH[BLOCKCHAIN_NETWORK] ||
+            window.ethereum.networkVersion ===
+              CHAIN_ID.ETH[BLOCKCHAIN_NETWORK] ||
+            (!window.ethereum.chainId && !window.ethereum.networkVersion));
+
+          //   console.log("window.ethereum.chainId==>", window.ethereum.chainId);
+          //   console.log(" CHAIN_ID.ETH[BLOCKCHAIN_NETWORK]==>",  CHAIN_ID.ETH[BLOCKCHAIN_NETWORK]);
+           
+          // debugger
+        } else {
+          //connect with bsc
+           envCheck = !(
+            window.ethereum.chainId ===
+              Web3.utils.numberToHex(CHAIN_ID.BSC[BLOCKCHAIN_NETWORK]) ||
+            window.ethereum.chainId === CHAIN_ID.BSC[BLOCKCHAIN_NETWORK] ||
+            window.ethereum.networkVersion === CHAIN_ID.BSC[BLOCKCHAIN_NETWORK] 
+          );
+       
+        }
 
         if (envCheck) {
           self.isWrongNetwork = true;
@@ -114,7 +119,11 @@ export default class WalletExtensionUtils {
           self.web3 = null;
         }
       } else throw new Error("Detect Wallet failed!");
+
+      return window.ethereum.chainId 
     }
+
+    
   }
 
   accountsChanged(callback) {
@@ -129,7 +138,7 @@ export default class WalletExtensionUtils {
 
   chainChanged(callback) {
     const self = this;
-    debugger;
+    // debugger;
     this.extension.on("chainChanged", function (chainId) {
       console.log("chainId==>", chainId);
       self.extension = window.ethereum;
@@ -145,6 +154,67 @@ export default class WalletExtensionUtils {
     return this.isWrongNetwork;
   }
 
+  //get current chain of extension
+  getCurrentChainId() {
+    return Number(window.ethereum.networkVersion);
+  }
+
+
+
+  async getTokenBalance(tokenAddress) {
+    const tokenContract = new this.web3.eth.Contract(erc20Abi, tokenAddress);
+
+    const tokenBalance = await tokenContract.methods
+      .balanceOf(this.address)
+      .call();
+    return exactMath.div(tokenBalance, exactMath.pow(10, 18))
+  }
+
+  async getGlitchBalance() {
+  
+    try {
+      const glitchAddress = CHAIN_IDS.eth.includes(this.getCurrentChainId())
+        ? ETH_GLITCH_ADDRESS
+        : BSC_GLITCH_ADDRESS;
+      const glitchBalance = await this.getTokenBalance(glitchAddress);
+      return glitchBalance;
+    } catch (error) {
+      console.log(error);
+      return 0;
+    }
+  }
+
+  async getEthSwapFee() {
+    // debugger;
+    try {
+      const contract = new this.web3.eth.Contract(
+        ethSwapAbi,
+        ETH_BRIDGE_CONTRACT_ADDRESS
+      );
+
+      return this.fromWei(await contract.methods.swapFee().call());
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  async getBscSwapFee() {
+    // debugger;
+    try {
+      const contract = new this.web3.eth.Contract(
+        bscSwapAbi,
+        BSC_BRIDGE_CONTRACT_ADDRESS
+      );
+
+      return this.fromWei(await contract.methods.swapFee().call());
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  //call approve smart contract use token f user
   async approve({ tokenContractAddress, contractAddress, amount }, callback) {
     const self = this;
     // console.log("amount==>", amount);
@@ -174,82 +244,98 @@ export default class WalletExtensionUtils {
     }
   }
 
-  async claim({ contractAddress, index }, callback) {
+  //call function swap BSC to ETH in smart contract
+  async swapBSCtoETH({ amount }, callback) {
     const self = this;
-    const contract = new self.web3.eth.Contract(abiContract, contractAddress);
+
+    const contract = new self.web3.eth.Contract(
+      bscSwapAbi,
+      BSC_BRIDGE_CONTRACT_ADDRESS
+    );
+    const swapFee = await contract.methods.swapFee().call();
+    amount = this.calculateSendAmount(Number(amount));
 
     try {
-      const claimResult = await contract.methods
-        .claim(index)
-        .send({ from: self.address })
+      const executeSwapResult = await contract.methods
+        .swapBSC2ETH(amount)
+        .send({ from: self.address, value: swapFee })
+        .on("transactionHash", (hash) => {
+          callback({
+            status: "SWAP_BSC_TO_ETH_SUBMIT",
+            txID: hash,
+          });
+        })
         .on("error", (error) => {
           console.log(error);
           callback({
-            status: "CLAIM_FAIL",
+            status: "SWAP_BSC_TO_ETH_FAIL",
           });
         })
         .then((receipt) => {
-          if (receipt.status == true) {
+          if (receipt.status === true) {
             callback({
-              status: "CLAIM_SUCCESS",
+              status: "SWAP_BSC_TO_ETH_SUCCESS",
               txID: receipt.transactionHash,
             });
-          } else callback({ status: "CLAIM_FAIL" });
+          } else callback({ status: "SWAP_BSC_TO_ETH_FAIL" });
         })
         .catch((err) => {
           console.log(err);
-          callback({ status: "CLAIM_FAIL" });
+          callback({ status: "SWAP_BSC_TO_ETH_FAIL" });
         });
-      return claimResult;
+      return executeSwapResult;
     } catch (e) {
       console.error(e.message);
       callback({
-        status: "CLAIM_FAIL",
+        status: "SWAP_BSC_TO_ETH_FAIL",
       });
       return e.message;
     }
   }
 
-  async buyTokens({ contractAddress, tokenAddress, amount }, callback) {
+  async swapETHtoBSC({ amount }, callback) {
     const self = this;
-    const contract = new self.web3.eth.Contract(abiContract, contractAddress);
-    amount = calculateBalanceSend(amount);
-    const amountInHex = "0x" + amount.toString(16);
 
-    let sendObject;
-    if (tokenAddress === "0x0000000000000000000000000000000000000000") {
-      sendObject = { from: self.address, value: amountInHex };
-    } else {
-      sendObject = { from: self.address };
-    }
+    const contract = new self.web3.eth.Contract(
+      ethSwapAbi,
+      ETH_BRIDGE_CONTRACT_ADDRESS
+    );
+    const swapFee = await contract.methods.swapFee().call();
+    amount = this.calculateSendAmount(Number(amount));
 
     try {
-      const boughtResult = await contract.methods
-        .participate(tokenAddress, amountInHex)
-        .send(sendObject)
+      const executeSwapResult = await contract.methods
+        .swapETH2BSC(amount)
+        .send({ from: self.address, value: swapFee })
+        .on("transactionHash", (hash) => {
+          callback({
+            status: "SWAP_ETH_TO_BSC_SUBMIT",
+            txID: hash,
+          });
+        })
         .on("error", (error) => {
           console.log(error);
           callback({
-            status: "BUY_FAIL",
+            status: "SWAP_ETH_TO_BSC_FAIL",
           });
         })
         .then((receipt) => {
-          if (receipt.status == true) {
+          if (receipt.status === true) {
             callback({
-              status: "BUY_SUCCESS",
+              status: "SWAP_ETH_TO_BSC_SUCCESS",
               txID: receipt.transactionHash,
             });
-          } else callback({ status: "BUY_FAIL" });
+          } else callback({ status: "SWAP_ETH_TO_BSC_FAIL" });
         })
         .catch((err) => {
           console.log(err);
-          callback({ status: "BUY_FAIL" });
+          callback({ status: "SWAP_ETH_TO_BSC_FAIL" });
         });
-      return boughtResult;
+      return executeSwapResult;
     } catch (e) {
       console.error(e.message);
       callback({
-        status: "BUY_FAIL",
+        status: "SWAP_ETH_TO_BSC_FAIL",
       });
       return e.message;
     }
@@ -260,211 +346,21 @@ export default class WalletExtensionUtils {
     return this.address;
   }
 
-  async getInfoAllocations(wallet) {
-    const claimStatus = {
-      0: 'PENDING',
-      1: 'OPEN',
-      2: 'CLOSED'
-    }
-    const contract = new this.web3.eth.Contract(abiContract, wallet);
-    const contractInfoAllocation = await contract.methods
-      .infoAllocations()
-      .call({ from: this.address })
 
-    let infoAllocation = []
-    for (let i = 0; i < contractInfoAllocation[0].length; i++) {
-      infoAllocation.push({
-        no: contractInfoAllocation[0][i],
-        allocationAmount: contractInfoAllocation[1][i],
-        timestamp: contractInfoAllocation[2][i],
-        claimedAmount: contractInfoAllocation[3][i],
-        status: claimStatus[contractInfoAllocation[4][i]]
-      })
-    }
-
-    return infoAllocation
-
-    // return [
-    //   {
-    //     no:1,
-    //     allocationAmount: 10,
-    //     timestamp: 1615973311,
-    //     claimedAmount: 120,
-    //     status: "PENDING"
-    //   },
-    //   {
-    //     no:2,
-    //     allocationAmount: 8,
-    //     timestamp: 1615993311,
-    //     claimedAmount: 20,
-    //     status: "CLOSED"
-    //   },
-    //   {
-    //     no:3,
-    //     allocationAmount: 6,
-    //     timestamp: 1615984311,
-    //     claimedAmount: 40,
-    //     status: "OPEN"
-    //   }
-
-    // ]
+  calculateSendAmount(amount) {
+    return this.web3.utils.toWei(amount.toString(), "ether");
   }
 
-  async getInfoWallet(wallet) {
-    // await this.getTokenBalance('0x083c478DB9289a91b4d20D0f86716aF4371872Ef')
-    // console.log(this.address, (new Date).getTime());
-    const tokenContract = new this.web3.eth.Contract(abiContract, wallet);
-    const contractInfo = await tokenContract.methods
-      .infoWallet()
-      .call({ from: this.address });
-    const bnbBalance = parseFloat(contractInfo[0] / 10 ** 18);
-    const tokenBalance = parseInt(contractInfo[1]);
-    const tier = contractInfo[2]
-    const roundState = parseInt(contractInfo[3]);
-    const roundStateText = contractInfo[4];
-    const roundTimestamp = parseInt(contractInfo[5]);
-    const remainingAllocation = parseInt(contractInfo[6]);
-    const userParticipation = parseInt(contractInfo[7]);
-
-
-    return {
-      tokenBalance,
-      tier,
-      roundState,
-      roundStateText,
-      // roundStateString,
-      roundTimestamp,
-      remainingAllocation,
-      bnbBalance,
-      userParticipation,
-    };
+  fromWei(amount) {
+    return this.web3.utils.fromWei(amount.toString(), "ether");
   }
 
-  async getTokenBalance(tokenAddress) {
-    const tokenContract = new this.web3.eth.Contract(erc20Abi, tokenAddress);
-
-    const tokenBalance = await tokenContract.methods
-      .balanceOf(this.address)
-      .call();
-
-    // console.log(tokenBalance)
-    return parseFloat(tokenBalance / 10 ** 18);
+  async getBalanceAccount (){
+   const symbol =  CHAIN_IDS.eth.includes(this.getCurrentChainId())?" ETH":" BNB"
+    const balance = await this.web3.eth.getBalance(this.address)
+     return helpers.formatNumberDownRound(this.fromWei(balance),6)  + symbol
+    
   }
-
-  async getBscpadBalance() {
-    const bscPadAddress = CHAIN_IDS.eth.includes(this.getCurrentChainId())
-      ? ETH_TOKEN_ADDRESS : BSC_TOKEN_ADDRESS;
-    const bscpadBalance = await this.getTokenBalance(bscPadAddress)
-    return bscpadBalance;
-  }
-
-  getCurrentChainId() {
-    return Number(window.ethereum.networkVersion);
-  }
-
-  async getAllowance(tokenAddress, contractAddress) {
-    const tokenContract = new this.web3.eth.Contract(erc20Abi, tokenAddress);
-    // const tokenContract = new this.web3.eth.Contract(abiContract, contractAddress);
-    // console.log("this.address==>", this.address);
-    const allocationNumber = await tokenContract.methods
-      .allowance(this.address, contractAddress)
-      .call();
-
-    return parseFloat(allocationNumber / 10 ** 18);
-  }
-
-    async swapBSCtoETH({ amount }, callback) {
-        const self = this;
-
-        const contract = new self.web3.eth.Contract(bscSwapAbi, BSC_BRIDGE_CONTRACT_ADDRESS);
-        amount = this.calculateSendAmount(Number(amount));
-
-        try {
-            const executeSwapResult = await contract.methods
-                .swapBSC2ETH(BSC_TOKEN_ADDRESS, amount)
-                .send({ from: self.address, value: BSC_BRIDGE_FEE })
-                .on("transactionHash", hash=>{
-                callback({
-                    status: "SWAP_BSC_TO_ETH_SUBMIT",
-                    txID: hash
-                });
-                })
-                .on("error", (error) => {
-                console.log(error);
-                callback({
-                    status: "SWAP_BSC_TO_ETH_FAIL",
-                });
-                })
-                .then((receipt) => {
-                if (receipt.status === true) {
-                    callback({
-                    status: "SWAP_BSC_TO_ETH_SUCCESS",
-                    txID: receipt.transactionHash,
-                    });
-                } else callback({ status: "SWAP_BSC_TO_ETH_FAIL" });
-                })
-                .catch((err) => {
-                console.log(err);
-                callback({ status: "SWAP_BSC_TO_ETH_FAIL" });
-                });
-            return executeSwapResult;
-        } catch (e) {
-            console.error(e.message);
-            callback({
-                status: "SWAP_BSC_TO_ETH_FAIL",
-            });
-            return e.message;
-        }
-    }
-
-    async swapETHtoBSC({ amount }, callback) {
-        const self = this;
-
-        const contract = new self.web3.eth.Contract(ethSwapAbi, ETH_BRIDGE_CONTRACT_ADDRESS);
-        amount = this.calculateSendAmount(Number(amount));
-
-        try {
-            const executeSwapResult = await contract.methods
-                .swapETH2BSC(ETH_TOKEN_ADDRESS, amount)
-                .send({ from: self.address, value: ETH_BRIDGE_FEE })
-                .on("transactionHash", hash=>{
-                callback({
-                    status: "SWAP_ETH_TO_BSC_SUBMIT",
-                    txID: hash
-                });
-                })
-                .on("error", (error) => {
-                console.log(error);
-                callback({
-                    status: "SWAP_ETH_TO_BSC_FAIL",
-                });
-                })
-                .then((receipt) => {
-                if (receipt.status === true) {
-                    callback({
-                    status: "SWAP_ETH_TO_BSC_SUCCESS",
-                    txID: receipt.transactionHash,
-                    });
-                } else callback({ status: "SWAP_ETH_TO_BSC_FAIL" });
-                })
-                .catch((err) => {
-                console.log(err);
-                callback({ status: "SWAP_ETH_TO_BSC_FAIL" });
-                });
-            return executeSwapResult;
-        } catch (e) {
-            console.error(e.message);
-            callback({
-                status: "SWAP_ETH_TO_BSC_FAIL",
-            });
-            return e.message;
-        }
-    }
-
-    calculateSendAmount(amount){
-        return this.web3.utils.toWei(amount.toString(), 'ether');
-    }
 }
 
-// getTokenBalance('0x083c478DB9289a91b4d20D0f86716aF4371872Ef')
-// console.log(new WalletExtensionUtils("METAMASK"));
+

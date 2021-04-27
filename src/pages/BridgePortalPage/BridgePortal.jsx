@@ -1,28 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { get } from 'lodash';
-import { Button } from 'react-bootstrap';
 import AmountInputPanel from '../../component/AmountInputPanel';
 import AssetPanel from '../../component/AssetPanel';
 import NetworkInputPanel from '../../component/NetworkInputPanel';
 import Card from '../../component/Card';
 import Column from '../../component/Column';
 import Container from '../../component/Container';
-import DailyLimitPanel from '../../component/DailyLimitPanel';
 import Row from '../../component/Row';
-import { NETWORK_LIST, CHAIN_IDS, TOKEN_NAME } from '../../constants';
+import { NETWORK_LIST, TOKEN_NAME } from '../../constants';
 import { ACTION_CONST } from '../../constants';
-import {
-    BSC_TOKEN_ADDRESS,
-    ETH_TOKEN_ADDRESS,
-    BSC_BRIDGE_CONTRACT_ADDRESS,
-    ETH_BRIDGE_CONTRACT_ADDRESS,
-} from '../../_configs';
+import Particles from 'react-particles-js';
+
+import { Button } from 'react-bootstrap';
 import StepModal from './StepModal';
 
 const BridgePortalPage = (props) => {
     const dispatch = useDispatch();
-    const currentNetWork = useSelector((state) => get(state, "wallet.currentInputNetwork", ""));
+
+    const currentNetWork = useSelector((state) => get(state, "wallet.currentInputNetwork", "eth"));
 
     const [amount, setAmount] = useState(0);
     const [inputNetwork, setInputNetwork] = useState(NETWORK_LIST[0]);
@@ -31,151 +27,17 @@ const BridgePortalPage = (props) => {
     const isConnectWallet = useSelector((state) =>
         get(state, 'utils.isConnectWallet', false)
     );
-    const walletUtils = useSelector((state) =>
-        get(state, 'utils.walletUtils', null)
-    );
 
-    const handleSwapButtonClick = () => {
-        if (walletUtils) {
-            if (inputNetwork.id === 'bsc' && outputNetwork.id === 'eth') {
-                if (!CHAIN_IDS.bsc.includes(walletUtils.getCurrentChainId())) {
-                    dispatch({
-                        type: ACTION_CONST.ALERT_FAILS,
-                        message: 'Wrong network!',
-                    });
 
-                    return;
-                }
+    useEffect(() => {
+        // console.log("network==>", inputNetwork);
+        dispatch({
+            type: ACTION_CONST.CURRENT_INPUT_NETWORK,
+            data: inputNetwork.id
+        })
+    }, [inputNetwork])
 
-                dispatch({
-                    type: ACTION_CONST.REQUEST_SUBMIT,
-                });
-                walletUtils.approve(
-                    {
-                        tokenContractAddress: BSC_TOKEN_ADDRESS,
-                        contractAddress: BSC_BRIDGE_CONTRACT_ADDRESS,
-                        amount: amount,
-                    },
-                    (data) => {
-                        if (data.status === 'APPROVED') {
-                            dispatch({
-                                type: ACTION_CONST.ALERT_SUCCESS,
-                                message: 'Approve Tokens successfully!',
-                            });
-
-                            walletUtils.swapBSCtoETH(
-                                {
-                                    amount: amount,
-                                },
-                                (result) => {
-                                    if (
-                                        result.status ===
-                                        'SWAP_BSC_TO_ETH_SUCCESS'
-                                    ) {
-                                        dispatch({
-                                            type: ACTION_CONST.REQUEST_DONE,
-                                        });
-                                        dispatch({
-                                            type: ACTION_CONST.ALERT_SUCCESS,
-                                            message: 'Swap successfully!',
-                                        });
-                                    }
-                                    if (
-                                        result.status === 'SWAP_BSC_TO_ETH_FAIL'
-                                    ) {
-                                        dispatch({
-                                            type: ACTION_CONST.REQUEST_DONE,
-                                        });
-                                        dispatch({
-                                            type: ACTION_CONST.ALERT_FAILS,
-                                            message: 'Swap fail!',
-                                        });
-                                    }
-                                }
-                            );
-                        }
-                        if (data.status === 'APPROVE_FAILS') {
-                            dispatch({
-                                type: ACTION_CONST.REQUEST_DONE,
-                            });
-                            dispatch({
-                                type: ACTION_CONST.ALERT_FAILS,
-                                message: 'Failed to Approve Tokens!',
-                            });
-                        }
-                    }
-                );
-            } else if (inputNetwork.id === 'eth' && outputNetwork.id === 'bsc') {
-                if (!CHAIN_IDS.eth.includes(walletUtils.getCurrentChainId())) {
-                    dispatch({
-                        type: ACTION_CONST.ALERT_FAILS,
-                        message: 'Wrong network!',
-                    });
-
-                    return;
-                }
-
-                dispatch({
-                    type: ACTION_CONST.REQUEST_SUBMIT,
-                });
-                walletUtils.approve(
-                    {
-                        tokenContractAddress: ETH_TOKEN_ADDRESS,
-                        contractAddress: ETH_BRIDGE_CONTRACT_ADDRESS,
-                        amount: amount,
-                    },
-                    (data) => {
-                        if (data.status === 'APPROVED') {
-                            dispatch({
-                                type: ACTION_CONST.ALERT_SUCCESS,
-                                message: 'Approve Tokens successfully!',
-                            });
-
-                            walletUtils.swapETHtoBSC(
-                                {
-                                    amount: amount,
-                                },
-                                (result) => {
-                                    if (
-                                        result.status ===
-                                        'SWAP_ETH_TO_BSC_SUCCESS'
-                                    ) {
-                                        dispatch({
-                                            type: ACTION_CONST.REQUEST_DONE,
-                                        });
-                                        dispatch({
-                                            type: ACTION_CONST.ALERT_SUCCESS,
-                                            message: 'Swap successfully!',
-                                        });
-                                    }
-                                    if (
-                                        result.status === 'SWAP_ETH_TO_BSC_FAIL'
-                                    ) {
-                                        dispatch({
-                                            type: ACTION_CONST.REQUEST_DONE,
-                                        });
-                                        dispatch({
-                                            type: ACTION_CONST.ALERT_FAILS,
-                                            message: 'Swap fail!',
-                                        });
-                                    }
-                                }
-                            );
-                        }
-                        if (data.status === 'APPROVE_FAILS') {
-                            dispatch({
-                                type: ACTION_CONST.REQUEST_DONE,
-                            });
-                            dispatch({
-                                type: ACTION_CONST.ALERT_FAILS,
-                                message: 'Failed to Approve Tokens!',
-                            });
-                        }
-                    }
-                );
-            }
-        }
-    };
+    
 
     const handleInputAmountChange = (value) => {
         setAmount(value);
@@ -185,6 +47,8 @@ const BridgePortalPage = (props) => {
         const network = inputNetwork;
         setInputNetwork(outputNetwork);
         setOutputNetwork(network);
+
+
     };
 
     const handleInputNetworkChange = (value) => {
@@ -208,55 +72,60 @@ const BridgePortalPage = (props) => {
             <Container>
                 <Row>
                     <Column>
-                        <Card title="BSCPad Bridge">
-                            <div className="font-14 text-center">
-                                The safe, fast and most secure way to bring
-                                cross-chain assets to BSCPad chains.
-                            </div>
-                            <hr />
-                            {/* <DailyLimitPanel a="?" b="?" c="?" /> */}
-                            <AssetPanel tokenName="BSCPad" />
-                            <div className="p-bridge d-flex align-items-center">
-                                <NetworkInputPanel
-                                    label="From"
-                                    networkList={NETWORK_LIST}
-                                    selectedNetwork={inputNetwork}
-                                    onNetworkChange={handleInputNetworkChange}
-                                />
-                                <div className="p-bridge-swap">
-                                    <button
-                                        type="button"
-                                        className="btn btn-link text-warning btn-sm px-1 py-0"
-                                        onClick={handleNetworkSwap}
-                                    >
-                                        <i className="mdi mdi-swap-horizontal font-24"></i>
-                                    </button>
+                        <h5 className="mb-3 d-flex align-items-center justify-content-center text-white font-20">GLITCH - BRIDGE 
+                        </h5>
+                        <div className="font-13 text-white mb-3 text-center">
+                            {/* The safe, fast and most secure way to bring
+                            cross-chain assets to Glitch chains. */}
+                        </div>
+                        <div className="card-wrap">
+                            <Card>
+                                <AssetPanel tokenName={TOKEN_NAME[currentNetWork]} />
+                                {/* <DailyLimitPanel a="?" b="?" c="?" /> */}
+                                <div className="p-bridge d-flex align-items-center">
+                                    <NetworkInputPanel
+                                        label="From"
+                                        networkList={NETWORK_LIST}
+                                        selectedNetwork={inputNetwork}
+                                        onNetworkChange={handleInputNetworkChange}
+                                    />
+                                    <div className="p-bridge-swap">
+                                        <button
+                                            type="button"
+                                            className="btn btn-link text-info me-2 btn-sm px-1 py-0 mb-3"
+                                            onClick={handleNetworkSwap}
+                                        >
+                                            <i className="mdi mdi-swap-horizontal font-28"></i>
+                                        </button>
+                                    </div>
+                                    <NetworkInputPanel
+                                        label="To"
+                                        networkList={NETWORK_LIST}
+                                        selectedNetwork={outputNetwork}
+                                        onNetworkChange={handleOutputNetworkChange}
+                                    />
                                 </div>
-                                <NetworkInputPanel
-                                    label="To"
-                                    networkList={NETWORK_LIST}
-                                    selectedNetwork={outputNetwork}
-                                    onNetworkChange={handleOutputNetworkChange}
+                                <AmountInputPanel
+                                    label="Amount"
+                                    onAmountChange={handleInputAmountChange}
+                                    tokenName={TOKEN_NAME[currentNetWork]}
                                 />
-                            </div>
-                            <AmountInputPanel
-                                label="Amount"
-                                onAmountChange={handleInputAmountChange}
-                            />
-                            <div className="mt-3">
-                                <Button
-                                    className="btn btn-primary btn-lg w-100"
-                                    disabled={!isConnectWallet || amount <= 0}
-                                    onClick={handleSwapButtonClick}
-                                >
-                                    Swap
+                            </Card>
+                        </div>
+                        <div className="mt-3">
+                            <Button
+                                className="btn btn-primary btn-lg w-100"
+                                disabled={!isConnectWallet || amount <= 0}
+                                // onClick={handleSwapButtonClick}
+                                data-bs-toggle="modal" data-bs-target="#stepModal"
+                            >
+                                SWAP
                                 </Button>
-                            </div>
-                            <div class="bottom-errors">
-                                {(!isConnectWallet) && <div className="bottom-error text-center text-warning mt-3 font-14"><i className="mdi mdi-alert-outline me-1"></i>Please connect your wallet to swap.</div>}
-                                {(isConnectWallet && amount <= 0) && <div className="bottom-error text-warning text-center mt-3 font-14"><i className="mdi mdi-alert-outline me-1"></i>Your balance not available to swap.</div>}
-                            </div>
-                        </Card>
+                        </div>
+                        <div className="bottom-errors">
+                            {(!isConnectWallet) && <div className="bottom-error text-center mt-3 font-14"><i className="mdi mdi-alert me-1"></i>Please connect your wallet to swap.</div>}
+                            {(isConnectWallet && amount <= 0) && <div className="bottom-error text-center mt-3 font-14"><i className="mdi mdi-alert me-1"></i>Your balance not available to swap.</div>}
+                        </div>
                     </Column>
                 </Row>
             </Container>
@@ -266,6 +135,114 @@ const BridgePortalPage = (props) => {
                 outputNetwork={outputNetwork}
                 clearAmount={() => setAmount(0)}
             />
+
+
+
+            <Particles params={{
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 2000
+                        }
+                    },
+                    "color": {
+                        "value": "#ffffff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#ffffff",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 6,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "repulse"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 400,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.6
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            }} />
         </>
     );
 };

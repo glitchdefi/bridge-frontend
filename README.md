@@ -1,14 +1,15 @@
-#1.Install node follow link: https://nodejs.org/
+# Glitch Bridge FrontEnd
 
-#2.Cd in folder project
+## Prerequisites
 
-#3 Run command: npm i
+The following prerequisites are required to be installed on your system before you can run this app:
 
-#4 Edit config project file data.json in path: ../public/data/data.json
+- NodeJS.
+- yarn (optional)
 
-#5 Run build by command: npm build
+## Execution
 
-#6 Go to folder build by command: cd build
-
-#7. Public folder build 
-
+```sh
+npm install
+npm run start
+```

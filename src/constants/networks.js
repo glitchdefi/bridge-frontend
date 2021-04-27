@@ -1,4 +1,5 @@
-export const NETWORK_LIST = [{
+export const NETWORK_LIST = [
+    {
         id: 'eth',
         name: 'Ethereum Network',
     },
@@ -13,7 +14,3 @@ export const CHAIN_IDS = {
     eth: [1, 3],
     bsc: [56, 97],
 };
-export const TOKEN_NAME = {
-    eth: 'GLCH',
-    bsc: 'GLCH'
-}

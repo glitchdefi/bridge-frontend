@@ -1,9 +1,7 @@
 import React from 'react';
 import ConnectWalletModal from '../ConnectWalletModal';
 import WalletModal from '../WalletModal';
-import HelpModal from '../HelpModal';
-import { Link } from "react-router-dom";
-import { ROUTES } from "../../../constants";
+
 
 
 export default function Footer() {
@@ -31,18 +29,18 @@ export default function Footer() {
               <a href="#">Privacy</a>
             </div> */}
           <div className="d-flex justify-content-between">
-            <div className="text-muted">Copyright © {currentYear}. All Rights Reserved by BSCPad</div>
+            <div className="text-muted">Copyright © {currentYear}. All Rights Reserved by Glitch</div>
             <div className="text-right pp-footer-link">
-              <Link target="_blank" to={ROUTES.PRIVACY_POLICY}>Privacy Policy </Link>
+              {/* <Link className="p-terms me-3" target="_blank" to={ROUTES.PRIVACY_POLICY}>Privacy Policy </Link> */}
               {/* <span className="mx-1">•</span> */}
-              <Link target="_blank" to={ROUTES.TERMS_OF_USE}>Terms of Use </Link>
+              {/* <Link className="p-terms" target="_blank" to={ROUTES.TERMS_OF_USE}>Terms of Use </Link> */}
             </div>
           </div>
           {/* </div> */}
         </div>
       </div>
       <ConnectWalletModal />
-      <HelpModal />
+
       <WalletModal/>
     
     </>
