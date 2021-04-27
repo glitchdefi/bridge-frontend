@@ -8,43 +8,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "fee",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "erc20Addr",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "symbol",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "decimals",
-        "type": "uint8"
-      }
-    ],
-    "name": "Initialized",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "internalType": "address",
         "name": "previousOwner",
@@ -66,13 +29,13 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "erc20Addr",
+        "name": "bep20Addr",
         "type": "address"
       },
       {
         "indexed": true,
         "internalType": "bytes32",
-        "name": "bscTxHash",
+        "name": "ethTxHash",
         "type": "bytes32"
       },
       {
@@ -94,6 +57,37 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "ethRegisterTxHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "ethErc20Addr",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "bscBep20Addr",
+        "type": "address"
+      }
+    ],
+    "name": "SwapPairCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "bep20Addr",
+        "type": "address"
+      },
       {
         "indexed": true,
         "internalType": "address",
@@ -130,7 +124,7 @@
         "type": "bytes32"
       }
     ],
-    "name": "filledBSCTx",
+    "name": "filledETHTx",
     "outputs": [
       {
         "internalType": "bool",
@@ -173,14 +167,49 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "swapMappingBSC2ETH",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "swapMappingETH2BSC",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "fee",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "erc20Addr",
-        "type": "address"
       },
       {
         "internalType": "address payable",
@@ -189,6 +218,13 @@
       }
     ],
     "name": "initialize",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -223,21 +259,21 @@
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "bscTxHash",
+        "name": "ethTxHash",
         "type": "bytes32"
       },
       {
         "internalType": "address",
-        "name": "toAddress",
+        "name": "ethErc20Addr",
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "bscBep20Addr",
+        "type": "address"
       }
     ],
-    "name": "fillBSC2ETHSwap",
+    "name": "createSwapPair",
     "outputs": [
       {
         "internalType": "bool",
@@ -251,12 +287,51 @@
   {
     "inputs": [
       {
+        "internalType": "bytes32",
+        "name": "ethTxHash",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "erc20Addr",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "toAddress",
+        "type": "address"
+      },
+      {
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
       }
     ],
-    "name": "swapETH2BSC",
+    "name": "fillETH2BSCSwap",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "bep20Addr",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "swapBSC2ETH",
     "outputs": [
       {
         "internalType": "bool",

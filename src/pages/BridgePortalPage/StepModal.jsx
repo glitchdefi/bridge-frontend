@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from 'react-bootstrap';
+import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import BlockUi from "react-block-ui"
 import "react-block-ui/style.css";
 import { get } from 'lodash';
@@ -14,13 +14,12 @@ import {
     ETH_EXPLORER,
     BSC_EXPLORER
 } from '../../_configs';
-import {  CHAIN_IDS } from '../../constants';
+import { NETWORK_LIST, CHAIN_IDS, TOKEN_NAME } from '../../constants';
 import { getStatusSwap } from '../../redux/services/kyc.api';
 
 
 const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount }) => {
     const dispatch = useDispatch();
-
     const showBlockUI = useSelector((state) =>
         get(state, "utils.blocking", false)
     );
@@ -36,9 +35,10 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
         get(state, 'utils.walletUtils', null)
     );
 
+    const walletAddress = useSelector((state) => get(state, "utils.walletAddress", false));
 
     const [currentStep, setCurrentStep] = useState(0);
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(4);
     const [txtID, setTxtID] = useState("");
     const [status, setStatus] = useState("pending")
 
@@ -254,7 +254,7 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
                 if (data) {
                     setTxtID(data["txid"]);
                     setStatus(data["status"].toLowerCase());
-                    if (data["status"].toLowerCase() === "completed" || data["status"].toLowerCase() === "fail") {
+                    if (data["status"].toLowerCase() == "completed" || data["status"].toLowerCase() == "fail") {
                        
                         setCurrentStep(4);
                         clearInterval(job);
@@ -288,16 +288,16 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
                                 <div className="bs-stepper w-100">
                                     <div className="bs-stepper-header" role="tablist">
                                         {/* your steps here */}
-                                        <div className={`step ${step === 1 ? "current" : ""} ${currentStep >= 1 ? "completed" : ""}`} id="swapButtonStep1">
+                                        <div className={`step ${step == 1 ? "current" : ""} ${currentStep >= 1 ? "completed" : ""}`} id="swapButtonStep1">
                                             <button type="button" className="step-trigger">
                                                 <span className="bs-stepper-circle"><i className="mdi mdi-format-list-checkbox" /></span>
                                                 <span className="bs-stepper-label">
-                                                    {currentStep === 0 ? "Confirmation" : "Confirmed"}
+                                                    {currentStep == 0 ? "Confirmation" : "Confirmed"}
                                                 </span>
                                             </button>
                                         </div>
                                         <div className="line" id="swapLineStep1" />
-                                        <div className={`step ${step === 2 ? "current" : ""} ${currentStep >= 2 ? "completed" : ""}`} id="swapButtonStep2">
+                                        <div className={`step ${step == 2 ? "current" : ""} ${currentStep >= 2 ? "completed" : ""}`} id="swapButtonStep2">
                                             <button type="button" className="step-trigger" >
                                                 <span className="bs-stepper-circle"><i className="mdi mdi-currency-usd" /></span>
                                                 <span className="bs-stepper-label">
@@ -306,20 +306,20 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
                                             </button>
                                         </div>
                                         <div className="line" id="swapLineStep2" />
-                                        <div className={`step ${step === 3 ? "current" : ""} ${currentStep >= 3 ? "completed" : ""}`} id="swapButtonStep3">
+                                        <div className={`step ${step == 3 ? "current" : ""} ${currentStep >= 3 ? "completed" : ""}`} id="swapButtonStep3">
                                             <button type="button" className="step-trigger">
                                                 <span className="bs-stepper-circle"><i className="mdi mdi-account-check-outline" /></span>
                                                 <span className="bs-stepper-label">
-                                                    {currentStep <= 2 ? "Depositing" : "Deposited"}
+                                                    {currentStep <= 2 ? "Submitting" : "Submitted"}
                                                 </span>
                                             </button>
                                         </div>
                                         <div className="line" id="swapLineStep3" />
-                                        <div className={`step ${step === 4 ? "current" : ""} ${currentStep >= 4 ?  status : ""}`} id="swapButtonStep4">
+                                        <div className={`step ${step == 4 ? "current" : ""} ${currentStep >= 4 ?  status : ""}`} id="swapButtonStep4">
                                             <button type="button" className="step-trigger">
                                                 <span className="bs-stepper-circle"><i className="mdi mdi-check" /></span>
                                                 <span className="bs-stepper-label" style={{textTransform: "capitalize"}}>
-                                                    {step === 4 ? status : "Completion"}
+                                                    {step == 4 ? status : "Completion"}
 
                                                 </span>
                                             </button>
@@ -328,19 +328,19 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
 
                                     <div className="bs-stepper-content">
                                         {
-                                            step === 1 && <div id="processStep1">
+                                            step == 1 && <div id="processStep1">
                                                 <div className="text-center">
                                                     <h5>Information</h5>
-                                                    <p className="mt-4">You want to swap  {`${amount || 0} ${tokenName}`} from {currentNetWork === "eth" ? "Ethereum network " : "Binance smart chain network "}
+                                                    <p className="mt-4">You want to swap  {`${amount || 0} ${tokenName}`} from {currentNetWork === "eth" ? "Ethereum net work" : "Binance smart chain network"}
                                                 to {currentNetWork === "eth" ? " Binance smart chain network" : " Ethereum network"}</p>
                                                     <div className="d-flex align-items-center justify-content-center mt-4">
-                                                        <span className="text-purple me-2">You will receive</span>
-                                                        <img className="mx-2" height="12" src="/images/tokens/bnb.png" alt="bnb"/>{' '}
+                                                        <span className="text-warning me-2">You will receive</span>
+                                                        <img className="mx-2" height="12" src="/images/tokens/bnb.png" />{' '}
                                                         {`${amount || 0} ${tokenName}`}
                                                         <span className="badge ms-2 p-coin-tag">{currentNetWork === "eth" ? "BEP20" : "ERC20"}</span>
                                                     </div>
                                                     <div className="d-flex align-items-center justify-content-center">
-                                                        <span className="text-purple me-2">Swap fee:</span>
+                                                        <span className="text-warning me-2">Swap fee:</span>
                                                         {`${currentNetWork === "eth" ? ethSwapFee || 0 : bscSwapFee || 0} ${currentNetWork === "eth" ? "ETH" : "BNB"} `}
                                                     </div>
 
@@ -348,32 +348,32 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
                                             </div>
                                         }
                                         {
-                                            step === 2 && <div id="processStep2">
+                                            step == 2 && <div id="processStep2">
                                                 <div className="text-center">
                                                     <h5>Pre-authorization</h5>
-                                                    <div className="font-14 text-purple">1<sup>st</sup> of 2 transactions required.</div>
-                                                    <p className="mt-4">First transaction is the Pre-authorization step, where you allow swap contract to access your tokens upto the provided amount.</p>
-                                                    <p className="font-14 text-purple mt-5"><i className="mdi mdi-alert me-1"></i>You will be asked to confirm that allow the smart contract to have access to <b>{amount}</b> {tokenName} from your wallet.</p>
+                                                    <div className="font-14 text-warning">1<sup>st</sup> of 2 transactions required.</div>
+                                                    <p className="mt-3">First transaction is the Pre-authorization step, where you allow swap contract to access your tokens upto the provided amount.</p>
+                                                    <p className="font-14 text-warning mt-5"><i className="mdi mdi-alert-outline me-1"></i>You will be asked to confirm that allow the smart contract to have access to <b>{amount}</b> {tokenName} from your wallet.</p>
                                                 </div>
                                             </div>
                                         }
                                         {
-                                            step === 3 && <div id="processStep3">
+                                            step == 3 && <div id="processStep3">
                                                 <div className="text-center">
                                                     <h5>Confirm</h5>
-                                                    <p className="mt-4">Second transaction is the <b>Swap</b> step, where the provided amount of {tokenName} tokens will be actually swap in the contract.</p>
-                                                    <p className="font-14 text-purple mt-5"><i className="mdi mdi-alert me-1"></i>This is the last transaction you need to make to finalize the swap.</p>
+                                                    <p className="mt-4">Second transaction is the <b>Swap</b> step, where the provided amount of {tokenName} tokens will be actually staked in the contract.</p>
+                                                    <p className="font-14 text-warning mt-5"><i className="mdi mdi-alert-outline me-1"></i>This is the last transaction you need to make to finalize the swap.</p>
                                                 </div>
                                             </div>
                                         }
                                         {
-                                            step === 4 && <div id="processStep4">
+                                            step == 4 && <div id="processStep4">
                                                 <div className="text-center">
                                                     <h5>Completion</h5>
-                                                    <p className="mt-4">Submit swap token {tokenName} <br />From {currentNetWork === "eth" ? "Ethereum network" : "Binance smart chain network"}&nbsp;to&nbsp;{currentNetWork === "eth" ? "Binance smart chain network" : "Ethereum network"} successfully!</p>
-                                                    <p className="font-14 text-purple mt-5"><i className="mdi mdi-alert me-1"></i>Please wait for the web3 wallet transaction to complete before any other action.</p>
+                                                    <p className="mt-4">Submit swap token {tokenName} <br />From {currentNetWork === "eth" ? "Ethereum net work" : "Binance smart chain network"}&nbsp;to&nbsp;{currentNetWork === "eth" ? "Binance smart chain network" : "Ethereum network"} successfully!</p>
+                                                    <p className="font-14 text-warning mt-5"><i className="mdi mdi-alert-outline me-1"></i>Please wait for the web3 wallet transaction to complete before any other action.</p>
                                                     <p>
-                                                        {outputNetwork === "eth" && status !== "pending" ?
+                                                        {outputNetwork === "eth" && status != "pending" ?
                                                             <a className="p-address" href={`${ETH_EXPLORER}/tx/${txtID}`} target="blank">{txtID}</a>
                                                             :
                                                             <a className="p-address" href={`${BSC_EXPLORER}/tx/${txtID}`} target="blank">{txtID}</a>

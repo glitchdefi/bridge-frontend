@@ -1,9 +1,9 @@
-import React from 'react';
-import {  useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { connect, useDispatch, useSelector } from "react-redux";
 import { ACTION_CONST } from "../../constants";
-import { get } from "lodash";
+import { fromPairs, get, isEmpty } from "lodash";
 import useCopyToClipboard from './CopyToClibboard';
-import { BSC_EXPLORER, ETH_EXPLORER } from '../../_configs';
+import { BSC_EXPLORER } from '../../_configs';
 
 const WalletModal = (props) => {
     const dispatch = useDispatch();
@@ -29,12 +29,12 @@ const WalletModal = (props) => {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <div className="mb-3 text-center">
-                                <h5 style={{ fontSize: '17px', wordBreak: 'break-word' }} className="mb-2"><b>
-                                    {walletAddress} {!copied ? <i className="mdi mdi-content-copy" onClick={() => setCopied(walletAddress)}></i> : <i className="mdi mdi-check"></i>}</b></h5>
+                            <div className="mb-3">
+                                <h5 style={{ fontSize: '17px', wordBreak: 'break-word' }} className="text-dark mb-2"><b>{walletAddress}</b></h5>
                                 <a href={`${BSC_EXPLORER}/address/${walletAddress}`} target="_blank" className="text-warning d-inline-flex align-items-center me-4" style={{ textDecoration: 'none' }}><span className="me-1">View on BscScan</span><i className="mdi mdi-open-in-new"></i></a>
-                                <a href={`${ETH_EXPLORER}/address/${walletAddress}`} target="_blank" className="text-warning d-inline-flex align-items-center me-4" style={{ textDecoration: 'none' }}><span className="me-1">View on ETHScan</span><i className="mdi mdi-open-in-new"></i></a>
-                               
+                                <a className="text-warning d-inline-flex align-items-center" href="#" onClick={() => setCopied(walletAddress)} style={{ textDecoration: 'none' }}>
+                                    <span className="me-1">Copy Address</span>{!copied ? <i className="mdi mdi-content-copy"></i> : <i className="mdi mdi-check"></i>}
+                                </a>
                             </div>
                             <div className="text-center mt-4">
                                 <a href="#" className="btn btn-outline-primary" onClick={handleLogout} data-bs-dismiss="modal">Logout</a>

@@ -2,6 +2,7 @@ import React from "react";
 import { Router, Switch} from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { ROUTES } from "./constants";
+import HomePage from "./pages/HomePage/HomePage";
 import { PrivateRoute } from "./component/PrivateRoute";
 import { actAlertClear, actAlertLinkClear } from "./redux/action";
 import { history } from "./utils/history";
@@ -16,7 +17,7 @@ const App = (props) => {
   window.setTimeout(function () {
     toggleAlert(false);
     // debugger
-    if (alert && JSON.stringify(alert) !== JSON.stringify({})) {
+    if (alert && JSON.stringify(alert) != JSON.stringify({})) {
       dispatch(actAlertClear());
     }
 

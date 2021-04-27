@@ -1,5 +1,14 @@
 
+export const GG_TOKEN = "6LflJ0QaAAAAAOOdRJd2P__DWDfyPEAdtnMv9a8D";
 
+export const buyIdoContractState = {
+  approving: "APPROVING",
+  approved: "APPROVED",
+  approveFailed: "APPROVE_FAILED",
+  buying: "BUYING",
+  buySuccess: "BUY_SUCCESS",
+  buyFailed: "BUY_FAILED",
+};
 
 export const extensionName = {
   metamask: "METAMASK",
@@ -19,12 +28,12 @@ export const WITHDRAW_STATUS = {
   ADMIN_CANCELLED: "AC", //admin ko cho rút
 };
 
-
-
 export const address0 = "0x0000000000000000000000000000000000000000";
-export const TOKEN_NAME = {
-  eth:'GLCH',
-  bsc:'GLCH'
-}
 
+
+export const GATE_WAY = {
+  "RE_INVEST": 'ReInvestment',
+  "BINANCE":"BINANCE SMART CHAIN",
+  "UNW":"UNW"
+}
 

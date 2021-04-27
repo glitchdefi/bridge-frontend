@@ -1,5 +1,5 @@
 {
-    "name": "glitch-bridge-frontend",
+    "name": "bsc-pad-frontend",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
@@ -18,7 +18,6 @@
         "connected-react-router": "^6.8.0",
         "crypto": "^1.0.1",
         "ethereumjs-wallet": "^0.6.0",
-        "exact-math": "^2.2.3",
         "fraction.js": "^4.0.13",
         "global": "^4.4.0",
         "history": "^4.10.1",
