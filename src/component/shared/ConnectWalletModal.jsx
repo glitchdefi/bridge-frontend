@@ -33,12 +33,18 @@ const ConnectWalletModal = (props) => {
     const addWallet = () => {
         setHasMetamask(isMetamaskAvailable());
         setHasTrustWallet(isTrustWalletAvailable());
-        setHasBinanceWallet(isBinanceExtensionAvailable())
+        setHasBinanceWallet(isBinanceExtensionAvailable());
 
-        // //set show modal help with mobile
-        // if (isMobile() && !isTrustWalletAvailable() && !isMetamaskAvailable()) {
-        //     dispatch({ type: ACTION_CONST.SET_SHOW_MODAL_HELP })
-        // }
+        if(isMetamaskAvailable()){
+            connectWithExtension(
+                getExtension().metamask
+            )
+        }
+        if(isTrustWalletAvailable()){
+            connectWithExtension(
+                getExtension().trustWallet
+            )
+        }
     };
 
 
@@ -169,7 +175,7 @@ const ConnectWalletModal = (props) => {
                                     </div>
                                 </div>
                             }
-                            {hasBinanceWallet &&
+                            {/* {hasBinanceWallet &&
                                 <div className="c-list border-b px-3 py-2 d-flex align-items-center" data-bs-dismiss="modal"
                                     onClick={() => {
                                         connectWithExtension(
@@ -181,7 +187,7 @@ const ConnectWalletModal = (props) => {
                                         Binance Chain Wallet
                              </div>
                                 </div>
-                            }
+                            } */}
 
                             {
                                 hasTrustWallet &&
