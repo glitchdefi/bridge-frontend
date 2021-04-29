@@ -69,6 +69,7 @@ const Header = (props) => {
         setInit(false)
         const job = setInterval(() => {
           walletUtils.getGlitchBalance().then(data => {
+         
             setGlitchBalance(data)
 
             //set balance glitch to store
@@ -140,7 +141,7 @@ const Header = (props) => {
                   :
                   <>
                     <li className="nav-item me-2 mb-2 mb-md-0">
-                      <span className="btn btn-primary btn-purple btn-sm me-2"><b>{glitchBalance}</b> GLITCH</span>
+                      <span className="btn btn-primary btn-purple btn-sm me-2"><b>{helpers.formatNumberDownRoundWithExtractMax(glitchBalance,8)}</b> GLITCH</span>
                       {currentNetWork === "eth" &&
                         <span className="btn btn-primary btn-purple btn-sm"><b>{amountBalance}</b></span>
                       }

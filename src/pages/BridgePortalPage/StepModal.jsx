@@ -15,7 +15,7 @@ import {
     BSC_EXPLORER
 } from '../../_configs';
 import {  CHAIN_IDS } from '../../constants';
-import { getStatusSwap } from '../../redux/services/kyc.api';
+import { getStatusSwap } from '../../redux/services/bridge.api';
 
 
 const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount }) => {

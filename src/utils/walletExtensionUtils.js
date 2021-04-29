@@ -167,7 +167,8 @@ export default class WalletExtensionUtils {
     const tokenBalance = await tokenContract.methods
       .balanceOf(this.address)
       .call();
-    return exactMath.div(tokenBalance, exactMath.pow(10, 18))
+      // debugger
+    return exactMath.div(Number(tokenBalance), exactMath.pow(10, 18))
   }
 
   async getGlitchBalance() {
@@ -358,7 +359,9 @@ export default class WalletExtensionUtils {
   async getBalanceAccount (){
    const symbol =  CHAIN_IDS.eth.includes(this.getCurrentChainId())?" ETH":" BNB"
     const balance = await this.web3.eth.getBalance(this.address)
-     return helpers.formatNumberDownRound(this.fromWei(balance),6)  + symbol
+    // debugger
+    
+     return helpers.formatNumberDownRoundWithExtractMax(this.fromWei(Number(balance)),8)  + symbol
     
   }
 }

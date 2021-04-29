@@ -5,6 +5,7 @@ const AVATARS = [
   "https://uploads.republic.co/p/users/avatars/small/000/495/921/495921-1603918306-631c3134317c6b89d945800117b7001813302445.JPG",
   "https://assets.republic.co/assets/default/user/small-9619dc1066bbd4d6507d72cb757a4dedd53b72fde52f7e402ecc8535824609c3.svg",
 ];
+const exactMath = require("exact-math");
 
 const validatePwd = (pwd) => {
   const regexPassword = new RegExp(
@@ -153,6 +154,15 @@ const formatNumberDownRound = (number, decimal) => {
   return number.toFixed(decimal);
 };
 
+const formatNumberDownRoundWithExtractMax = (number, decimal) => {
+  return exactMath
+    .div(
+      exactMath.floor(exactMath.mul(number, exactMath.pow(10, decimal))),
+      exactMath.pow(10, decimal)
+    )
+    .toFixed(decimal);
+};
+
 export const helpers = {
   convertTimeStampToDate,
   validatePwd,
@@ -174,5 +184,6 @@ export const helpers = {
   formatTransactionHash,
   getDateDiff,
   randomAvatar,
-  formatNumberDownRound
+  formatNumberDownRound,
+  formatNumberDownRoundWithExtractMax
 };
