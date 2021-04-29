@@ -22,7 +22,7 @@ export default function AmountInputPanel({ label, onAmountChange, tokenName }) {
 
   const handleInputAmountChange = (e) => {
     if (isConnectWallet) {
-      const value = Number(e.target.value);
+      const value = e.target.value;
 
       if (value > glitchBalance) {
         handleMaxButtonClick();
@@ -49,7 +49,7 @@ export default function AmountInputPanel({ label, onAmountChange, tokenName }) {
           <input
             type="number"
             className="form-control px-0"
-            placeholder="0.0"
+            placeholder="0"
             value={amount}
             onChange={(e) => handleInputAmountChange(e)}
             disabled={!isConnectWallet}

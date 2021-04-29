@@ -1,7 +1,7 @@
 module.exports = {
     BLOCKCHAIN_NETWORK: 'TESTNET',
     BSC_EXPLORER: 'https://testnet.bscscan.com',
-    BSC_NODE_URL: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+    // BSC_NODE_URL: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
     BSC_GLITCH_ADDRESS: '0xC29c28Ef6eC433076C5e0BCbAFcC033537b48B0b',
     BSC_BRIDGE_CONTRACT_ADDRESS: '0x2700d71C5FCfd5109f6997Aaf6A6e1B47ED0E717',
     ETH_EXPLORER: 'https://ropsten.etherscan.io',
