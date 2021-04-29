@@ -5,7 +5,7 @@ export const getStatusSwap = async (network, txid) => {
   try {
 
     const result = await axios.get(
-      `${BACK_END_URL}/api/bridge?network=${network}&txid=${txid}`
+      `${BACK_END_URL}/api/status?network=${network}&txid=${txid}`
     );
     // console.log(result);
     if (result.status === 200) {

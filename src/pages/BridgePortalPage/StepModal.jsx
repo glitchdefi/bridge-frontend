@@ -261,7 +261,7 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
                     }
                 }
             })
-        }, 5 * 1000)
+        }, 10* 1000)
     }
 
     const handleClear = () =>{
