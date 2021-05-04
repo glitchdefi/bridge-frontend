@@ -8,7 +8,7 @@ import Card from '../../component/Card';
 import Column from '../../component/Column';
 import Container from '../../component/Container';
 import Row from '../../component/Row';
-import { NETWORK_LIST, TOKEN_NAME } from '../../constants';
+import { LIMIT_VALUE, NETWORK_LIST, TOKEN_NAME } from '../../constants';
 import { ACTION_CONST } from '../../constants';
 import Particles from 'react-particles-js';
 
@@ -23,6 +23,7 @@ const BridgePortalPage = (props) => {
     const [amount, setAmount] = useState(0);
     const [inputNetwork, setInputNetwork] = useState(NETWORK_LIST[0]);
     const [outputNetwork, setOutputNetwork] = useState(NETWORK_LIST[1]);
+    const [enableSwapButton, setEnableSwapButton] = useState(false)
 
     const isConnectWallet = useSelector((state) =>
         get(state, 'utils.isConnectWallet', false)
@@ -37,7 +38,18 @@ const BridgePortalPage = (props) => {
         })
     }, [inputNetwork])
 
-    
+
+    //check enable swap button
+    useEffect(() => {
+        if(amount >= LIMIT_VALUE.MIN && amount <= LIMIT_VALUE.MAX){
+            setEnableSwapButton(true)  
+        }else{
+            setEnableSwapButton(false)
+        }
+       
+    }, [amount])
+
+
 
     const handleInputAmountChange = (value) => {
         setAmount(value);
@@ -47,8 +59,6 @@ const BridgePortalPage = (props) => {
         const network = inputNetwork;
         setInputNetwork(outputNetwork);
         setOutputNetwork(network);
-
-
     };
 
     const handleInputNetworkChange = (value) => {
@@ -72,7 +82,7 @@ const BridgePortalPage = (props) => {
             <Container>
                 <Row>
                     <Column>
-                        <h5 className="mb-3 d-flex align-items-center justify-content-center text-white font-20">GLITCH - BRIDGE 
+                        <h5 className="mb-3 d-flex align-items-center justify-content-center text-white font-20">GLITCH - BRIDGE
                         </h5>
                         <div className="font-13 text-white mb-3 text-center">
                             {/* The safe, fast and most secure way to bring
@@ -115,7 +125,7 @@ const BridgePortalPage = (props) => {
                         <div className="mt-3">
                             <Button
                                 className="btn btn-primary btn-lg w-100"
-                                disabled={!isConnectWallet || amount <= 0}
+                                disabled={!isConnectWallet || !enableSwapButton}
                                 // onClick={handleSwapButtonClick}
                                 data-bs-toggle="modal" data-bs-target="#stepModal"
                             >
@@ -124,7 +134,7 @@ const BridgePortalPage = (props) => {
                         </div>
                         <div className="bottom-errors">
                             {(!isConnectWallet) && <div className="bottom-error text-center mt-3 font-14"><i className="mdi mdi-alert me-1"></i>Please connect your wallet to swap.</div>}
-                            {(isConnectWallet && amount <= 0) && <div className="bottom-error text-center mt-3 font-14"><i className="mdi mdi-alert me-1"></i>Your balance not available to swap.</div>}
+                            {(isConnectWallet && (amount < LIMIT_VALUE.MIN || amount > LIMIT_VALUE.MAX)) && <div className="bottom-error text-center mt-3 font-14"><i className="mdi mdi-alert me-1"></i>Your balance not available to swap.</div>}
                         </div>
                     </Column>
                 </Row>

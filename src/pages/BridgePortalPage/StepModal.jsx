@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 import BlockUi from "react-block-ui"
 import "react-block-ui/style.css";
 import { get } from 'lodash';
-import { ACTION_CONST } from '../../constants';
+import { ACTION_CONST, LIMIT_VALUE } from '../../constants';
 import {
     BSC_GLITCH_ADDRESS,
     ETH_GLITCH_ADDRESS,
@@ -52,6 +52,21 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
                     });
 
                     return;
+                }
+
+                if(amount >LIMIT_VALUE.MAX){
+                    dispatch({
+                        type: ACTION_CONST.ALERT_FAILS,
+                        message: `Your number has to less than ${LIMIT_VALUE.MAX}`,
+                    });
+                   return 
+                }
+                if(amount <LIMIT_VALUE.MIN){
+                    dispatch({
+                        type: ACTION_CONST.ALERT_FAILS,
+                        message: `Your number has to greater than ${LIMIT_VALUE.MIN}`,
+                    });
+                   return 
                 }
 
                 dispatch({
