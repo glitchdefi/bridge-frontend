@@ -165,7 +165,11 @@ const BridgePortalPage = (props) => {
                         </div>
                         <div className="bottom-errors">
                             {(!isConnectWallet) && <div className="bottom-error text-center mt-3 font-14"><i className="mdi mdi-alert me-1"></i>Please connect your wallet to swap.</div>}
-                            {(isConnectWallet && (amount < LIMIT_VALUE.MIN || amount > LIMIT_VALUE.MAX)) && <div className="bottom-error text-center mt-3 font-14"><i className="mdi mdi-alert me-1"></i>Your balance not available to swap.</div>}
+
+                            {(isConnectWallet && (amount < LIMIT_VALUE.MIN && amount!==0)) && <div className="bottom-error text-center mt-3 font-14">
+                                <i className="mdi mdi-alert me-1"></i>Amount is less than min amount</div>}
+                            {(isConnectWallet && (amount > LIMIT_VALUE.MAX)) && <div className="bottom-error text-center mt-3 font-14">
+                                <i className="mdi mdi-alert me-1"></i>Amount is greater than max amount.</div>}
                         </div>
                     </Column>
                 </Row>
