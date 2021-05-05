@@ -17,6 +17,6 @@ export const TOKEN_NAME = {
 }
 export const LIMIT_VALUE ={
   MIN: 100,
-  MAX: 50000
+  MAX: 30000
 }
 
