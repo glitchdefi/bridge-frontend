@@ -1130,6 +1130,26 @@ body.darkmode .btn-switch.on span {
     white-space: nowrap;
 }
 
+.p-alert-warning {
+    font-size: 13px;
+    background-color: rgb(69 141 148 / 20%);
+    position: relative;
+    padding: 10px;
+    padding-left: 45px;
+    margin-bottom: 0 !important;
+    line-height: 1.4;
+}
+
+.p-alert-warning li b {
+    color: #dedede;
+}
+
+.p-alert-warning .mdi {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 28px;
+}
 @media (min-width: 576px) {
     .p-modal-dialog {
         max-width: 420px;

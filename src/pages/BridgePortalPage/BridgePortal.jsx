@@ -14,11 +14,13 @@ import Particles from 'react-particles-js';
 
 import { Button } from 'react-bootstrap';
 import StepModal from './StepModal';
+import { helpers } from '../../utils/helpers';
 
 const BridgePortalPage = (props) => {
     const dispatch = useDispatch();
 
     const currentNetWork = useSelector((state) => get(state, "wallet.currentInputNetwork", "eth"));
+    const walletAddress = useSelector((state) => get(state, "utils.walletAddress", false));
 
     const [amount, setAmount] = useState(0);
     const [inputNetwork, setInputNetwork] = useState(NETWORK_LIST[0]);
@@ -41,12 +43,12 @@ const BridgePortalPage = (props) => {
 
     //check enable swap button
     useEffect(() => {
-        if(amount >= LIMIT_VALUE.MIN && amount <= LIMIT_VALUE.MAX){
-            setEnableSwapButton(true)  
-        }else{
+        if (amount >= LIMIT_VALUE.MIN && amount <= LIMIT_VALUE.MAX) {
+            setEnableSwapButton(true)
+        } else {
             setEnableSwapButton(false)
         }
-       
+
     }, [amount])
 
 
@@ -115,11 +117,40 @@ const BridgePortalPage = (props) => {
                                         onNetworkChange={handleOutputNetworkChange}
                                     />
                                 </div>
+                                {
+                                    walletAddress && <>
+                                        <div className="p-form-group mb-2">
+                                            <label className="form-label p-main-text">Destination</label>
+                                            <div className="p-input-group" style={{ position: 'relative' }}>
+                                                <img style={{ position: 'absolute', left: '0px', top: '7px' }} src={currentNetWork === 'eth' ? '/images/networks/eth-icon.svg' : '/images/networks/bsc-icon.svg'} height="18" />
+                                                <input style={{ fontSize: '14px' }}
+                                                    type="text"
+                                                    className="form-control pe-0 ps-4 pb-0"
+                                                    value={helpers.formatTransactionHash(walletAddress, 10, 10)}
+                                                    readOnly={true}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="mb-3">
+                                            <div className="alert p-alert-warning">
+                                                <i className="mdi mdi-information-outline"></i>
+                                            Your swap address will be your receiving address, please switch the network to check your balance after completion.
+                                        </div>
+                                        </div>
+                                    </>
+                                }
                                 <AmountInputPanel
                                     label="Amount"
                                     onAmountChange={handleInputAmountChange}
                                     tokenName={TOKEN_NAME[currentNetWork]}
                                 />
+                                <div className="alert p-alert-warning">
+                                    <i className="mdi mdi-alert-outline"></i>
+                                    <ol className="mb-0">
+                                        <li>The minimum amount is <b>{LIMIT_VALUE.MIN}</b> {inputNetwork === "bsc" ? TOKEN_NAME.bsc : TOKEN_NAME.eth}</li>
+                                        <li>The max amount is <b>{LIMIT_VALUE.MAX}</b> {inputNetwork === "bsc" ? TOKEN_NAME.bsc : TOKEN_NAME.eth}</li>
+                                    </ol>
+                                </div>
                             </Card>
                         </div>
                         <div className="mt-3">
