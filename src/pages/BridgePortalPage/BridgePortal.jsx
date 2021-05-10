@@ -49,7 +49,7 @@ const BridgePortalPage = (props) => {
             const tempValue = helpers.formatNumberDownRound(amount,2)
             console.log("tempValue==>", tempValue);
             if (tempValue >= LIMIT_VALUE.MIN && tempValue <= LIMIT_VALUE.MAX) {
-                debugger
+             
                 setEnableSwapButton(true)
             } else {
                 setEnableSwapButton(false)
@@ -177,9 +177,9 @@ const BridgePortalPage = (props) => {
                         <div className="bottom-errors">
                             {(!isConnectWallet) && <div className="bottom-error text-center mt-3 font-14"><i className="mdi mdi-alert me-1"></i>Please connect your wallet to swap.</div>}
 
-                            {(isConnectWallet && (amount < LIMIT_VALUE.MIN && amount!==0)) && <div className="bottom-error text-center mt-3 font-14">
+                            {(isConnectWallet && (helpers.formatNumberDownRound(amount,2) < LIMIT_VALUE.MIN && amount!==0)) && <div className="bottom-error text-center mt-3 font-14">
                                 <i className="mdi mdi-alert me-1"></i>Amount is less than min amount</div>}
-                            {(isConnectWallet && (amount > LIMIT_VALUE.MAX)) && <div className="bottom-error text-center mt-3 font-14">
+                            {(isConnectWallet && (helpers.formatNumberDownRound(amount,2) > LIMIT_VALUE.MAX)) && <div className="bottom-error text-center mt-3 font-14">
                                 <i className="mdi mdi-alert me-1"></i>Amount is greater than max amount.</div>}
                         </div>
                     </Column>
