@@ -142,15 +142,22 @@ const randomAvatar = () => {
 
 const formatNumberDownRound = (number, decimal) => {
   const sub = number.toString().split(".");
-
+  
   if (sub.length >= 2) {
     if (sub[1].length > decimal) {
       const precision = sub[1].substring(0, decimal);
       return `${sub[0]}.${precision}`;
       // const srt = number.toString();
     }
+    if(typeof number === "string"){
+      return Number(number).toFixed(decimal);
+    }
     return number.toFixed(decimal);
   }
+  if(typeof number === "string"){
+    return Number(number).toFixed(decimal);
+  }
+
   return number.toFixed(decimal);
 };
 

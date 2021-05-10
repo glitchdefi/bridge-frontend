@@ -11,7 +11,7 @@ import Row from '../../component/Row';
 import { LIMIT_VALUE, NETWORK_LIST, TOKEN_NAME } from '../../constants';
 import { ACTION_CONST } from '../../constants';
 import Particles from 'react-particles-js';
-
+import { BigNumber } from "bignumber.js";
 import { Button } from 'react-bootstrap';
 import StepModal from './StepModal';
 import { helpers } from '../../utils/helpers';
@@ -43,11 +43,22 @@ const BridgePortalPage = (props) => {
 
     //check enable swap button
     useEffect(() => {
-        if (amount >= LIMIT_VALUE.MIN && amount <= LIMIT_VALUE.MAX) {
-            setEnableSwapButton(true)
-        } else {
-            setEnableSwapButton(false)
+        // let tempValue = 0;
+        // const tempValue =   new BigNumber(amount.toString()).toFixed(18).replace(/\.?0+$/,"").toString()
+        if(amount>0){
+            const tempValue = helpers.formatNumberDownRound(amount,2)
+            console.log("tempValue==>", tempValue);
+            if (tempValue >= LIMIT_VALUE.MIN && tempValue <= LIMIT_VALUE.MAX) {
+                debugger
+                setEnableSwapButton(true)
+            } else {
+                setEnableSwapButton(false)
+            }
+            return;
         }
+            setEnableSwapButton(false) 
+        
+        
 
     }, [amount])
 
