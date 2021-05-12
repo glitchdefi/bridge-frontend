@@ -17,7 +17,7 @@ export default function NetworkInputPanel({
         onNetworkChange(network);
     };
 
-    // console.log("currentNetwork===>", currentNetwork);
+    // //console.log("currentNetwork===>", currentNetwork);
 
     return (
         <>

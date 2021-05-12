@@ -86,7 +86,7 @@ const ConnectWalletModal = (props) => {
         try {
             temp.accountsChanged(async (res) => {
                 if (res !== undefined) {
-                    // console.log('account changed')
+                    // //console.log('account changed')
                     dispatch({
                         type: ACTION_CONST.ENABLE_WALLET_SUCCESS,
                         data: temp
@@ -101,7 +101,7 @@ const ConnectWalletModal = (props) => {
             dispatch({
                 type: ACTION_CONST.REQUEST_DONE
             })
-            console.log("error: ", e);
+            //console.log("error: ", e);
         }
 
         //if chain ID

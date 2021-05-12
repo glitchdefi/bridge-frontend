@@ -33,7 +33,7 @@ const BridgePortalPage = (props) => {
 
 
     useEffect(() => {
-        // console.log("network==>", inputNetwork);
+        // //console.log("network==>", inputNetwork);
         dispatch({
             type: ACTION_CONST.CURRENT_INPUT_NETWORK,
             data: inputNetwork.id
@@ -47,7 +47,7 @@ const BridgePortalPage = (props) => {
         // const tempValue =   new BigNumber(amount.toString()).toFixed(18).replace(/\.?0+$/,"").toString()
         if(amount>0){
             const tempValue = helpers.formatNumberDownRound(amount,2)
-            console.log("tempValue==>", tempValue);
+            //console.log("tempValue==>", tempValue);
             if (tempValue >= LIMIT_VALUE.MIN && tempValue <= LIMIT_VALUE.MAX) {
              
                 setEnableSwapButton(true)

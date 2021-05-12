@@ -73,7 +73,7 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
 
                 //check allowence 
                 const allowance = await walletUtils.getAllowance(BSC_GLITCH_ADDRESS, BSC_BRIDGE_CONTRACT_ADDRESS);
-                console.log("allowance==>", allowance);
+                //console.log("allowance==>", allowance);
                 //check allowance > amount
                 if(Number(allowance) >= Number(amount) ){
                     setStep(3)
@@ -130,7 +130,7 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
 
                 //check allowence 
                 const allowance = await walletUtils.getAllowance(ETH_GLITCH_ADDRESS, ETH_BRIDGE_CONTRACT_ADDRESS);
-                console.log("allowance==>", allowance);
+                //console.log("allowance==>", allowance);
                 // debugger
                 //check allowance > amount
                 if(Number(allowance) >= Number(amount) ){

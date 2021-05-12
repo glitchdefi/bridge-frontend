@@ -407,7 +407,7 @@ export function generateSeq() {
 
 export function logTraffic(event = '...', message) {
   if (isDevMode()) {
-    // console.log(event, message)
+    // //console.log(event, message)
   }
 }
 
@@ -453,7 +453,7 @@ export function onVisibilityChange(callback) {
     typeof document.addEventListener === 'undefined' ||
     hidden === undefined
   ) {
-    console.log(
+    //console.log(
       'This demo requires a browser, such as Google Chrome or Firefox, that supports the Page Visibility API.'
     )
   } else {
@@ -671,7 +671,7 @@ export const remainTime = (time) => {
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  // console.log("remain day====>", days + " d " + hours + " h" + minutes + " m" + seconds + " s");
+  // //console.log("remain day====>", days + " d " + hours + " h" + minutes + " m" + seconds + " s");
   return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
   // Output the result in an element with id="demo"
 }

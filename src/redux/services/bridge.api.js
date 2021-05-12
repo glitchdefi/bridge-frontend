@@ -7,7 +7,7 @@ export const getStatusSwap = async (network, txid) => {
     const result = await axios.get(
       `${BACK_END_URL}/api/status?network=${network}&txid=${txid}`
     );
-    // console.log(result);
+    // //console.log(result);
     if (result.status === 200) {
       return result.data.data;
     }
@@ -16,7 +16,7 @@ export const getStatusSwap = async (network, txid) => {
   } catch (error) {
     const response = error.response;
 
-    console.log(response);
+    //console.log(response);
     //    return response
 
     return null;
