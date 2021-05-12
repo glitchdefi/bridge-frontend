@@ -42,7 +42,21 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
     const [txtID, setTxtID] = useState("");
     const [status, setStatus] = useState("pending")
 
-    const handleApproveStep = () => {
+    const handleApproveStep = async () => {
+        if(amount >LIMIT_VALUE.MAX){
+            dispatch({
+                type: ACTION_CONST.ALERT_FAILS,
+                message: `Your number has to less than ${LIMIT_VALUE.MAX}`,
+            });
+           return 
+        }
+        if(amount <LIMIT_VALUE.MIN){
+            dispatch({
+                type: ACTION_CONST.ALERT_FAILS,
+                message: `Your number has to greater than ${LIMIT_VALUE.MIN}`,
+            });
+           return 
+        }
         if (walletUtils) {
             if (inputNetwork.id === 'bsc' && outputNetwork.id === 'eth') {
                 if (!CHAIN_IDS.bsc.includes(walletUtils.getCurrentChainId())) {
@@ -54,21 +68,20 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
                     return;
                 }
 
-                if(amount >LIMIT_VALUE.MAX){
-                    dispatch({
-                        type: ACTION_CONST.ALERT_FAILS,
-                        message: `Your number has to less than ${LIMIT_VALUE.MAX}`,
-                    });
-                   return 
-                }
-                if(amount <LIMIT_VALUE.MIN){
-                    dispatch({
-                        type: ACTION_CONST.ALERT_FAILS,
-                        message: `Your number has to greater than ${LIMIT_VALUE.MIN}`,
-                    });
-                   return 
+                
+
+
+                //check allowence 
+                const allowance = await walletUtils.getAllowance(BSC_GLITCH_ADDRESS, BSC_BRIDGE_CONTRACT_ADDRESS);
+                console.log("allowance==>", allowance);
+                //check allowance > amount
+                if(Number(allowance) >= Number(amount) ){
+                    setStep(3)
+                    setCurrentStep(2)
+                    return;
                 }
 
+                //Block UI
                 dispatch({
                     type: ACTION_CONST.REQUEST_SUBMIT,
                 });
@@ -114,9 +127,23 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
                     return;
                 }
 
+
+                //check allowence 
+                const allowance = await walletUtils.getAllowance(ETH_GLITCH_ADDRESS, ETH_BRIDGE_CONTRACT_ADDRESS);
+                console.log("allowance==>", allowance);
+                // debugger
+                //check allowance > amount
+                if(Number(allowance) >= Number(amount) ){
+                    setStep(3)
+                    setCurrentStep(2)
+                    return;
+                }
+
+                //Block UI
                 dispatch({
                     type: ACTION_CONST.REQUEST_SUBMIT,
                 });
+
                 walletUtils.approve(
                     {
                         tokenContractAddress: ETH_GLITCH_ADDRESS,
@@ -422,7 +449,7 @@ const StepModal = ({ amount, tokenName, inputNetwork, outputNetwork, clearAmount
                                 {
                                     step === 3 &&
                                     <Button className="btn btn-primary btn-lg px-5"
-                                        onClick={handleSwapClickStep}
+                                        onClick={async ()=> handleSwapClickStep()}
                                     >
                                         Submit
                                     </Button>

@@ -364,6 +364,19 @@ export default class WalletExtensionUtils {
      return helpers.formatNumberDownRoundWithExtractMax(this.fromWei(Number(balance)),8)  + symbol
     
   }
+
+  //add function get getAllowance
+  async getAllowance(tokenAddress, contractAddress) {
+    const tokenContract = new this.web3.eth.Contract(erc20Abi, tokenAddress);
+
+    const allocationNumber = await tokenContract.methods
+      .allowance(this.address, contractAddress)
+      .call();
+      // return exactMath.div(allocationNumber, exactMath.pow(10, 18))
+      return new BigNumber(allocationNumber.toString()).dividedBy(10 ** 18).toString()
+    // return parseFloat(allocationNumber / 10 ** 18);
+  }
+
 }
 
 
