@@ -40,7 +40,7 @@ const Header = (props) => {
       walletUtils.getBalanceAccount().then(balance => {
         setAmountBalance(balance)
 
-      }).catch(err => //console.log(err));
+      }).catch(err => console.log(err));
       if (currentNetWork === "eth") {
 
 
@@ -81,7 +81,7 @@ const Header = (props) => {
           walletUtils.getBalanceAccount().then(balance => {
             setAmountBalance(balance)
 
-          }).catch(err => //console.log(err));
+          }).catch(err => console.log(err));
 
         }, 5 * 1000);
         // set reducer getbalance
