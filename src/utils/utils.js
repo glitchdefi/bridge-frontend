@@ -23,7 +23,7 @@ export function retryWithTimeout(
     try {
       await callback()
     } catch (e) {
-      // //console.log(e.message)
+      // console.log(e.message)
       if (retryTime === 0) {
         console.error(e.message)
         await callbackReject()
