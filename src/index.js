@@ -2,19 +2,21 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 
-
-// import store from "./redux/store";
-import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import configureStore from "./redux/store";
 import { history } from "./utils/history";
+import { ToastsProvider } from "./contexts/ToastsContext";
+import App from "./App";
+
+import "./styles/global-styles.css"
+
 const { store } = configureStore({}, history);
 
 ReactDOM.render(
   <Provider store={store}>
-    {/* <PersistGate persistor={persistor}> */}
+    <ToastsProvider>
       <App />
-    {/* </PersistGate> */}
+    </ToastsProvider>
   </Provider>,
   document.getElementById("root")
 );
