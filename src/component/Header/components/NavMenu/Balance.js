@@ -6,7 +6,7 @@ import { Text } from "../../../Text";
 
 export function Balance({ value }) {
   return (
-    <Button variant="secondary">
+    <Button width="100%" variant="secondary">
       <Wrapper>
         <img width="18px" src="/images/small_logo.png" />
         <Text>{helpers.formatNumberDownRoundWithExtractMax(value, 8)}</Text>

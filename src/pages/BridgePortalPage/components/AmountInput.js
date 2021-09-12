@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { get } from "lodash";
 
+import breakPoints from "../../../utils/breakPoints";
+
 // Components
 import { Box, Flex } from "../../../component/Box";
 import { Text } from "../../../component/Text";
@@ -45,7 +47,7 @@ export function AmountInput({ value, min, onChange }) {
   return (
     <>
       <Wrapper error={hasError}>
-        <Flex>
+        <Flex className="input-wrapper">
           <Flex>
             <img src="/images/small_logo.png" width="24px" />
             <StyledInput
@@ -100,6 +102,17 @@ const Wrapper = styled.div`
 
   .prefix {
     display: none;
+  }
+
+  @media ${breakPoints.device.lg} {
+    .input-wrapper {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .prefix {
+      display: flex;
+    }
   }
 `;
 

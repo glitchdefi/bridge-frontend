@@ -9,7 +9,7 @@ export function WalletAddress({ address, currentNetWorkId, onShowWalletInfo }) {
   const network = currentNetWorkId === 97 ? "bsc" : "eth";
 
   return (
-    <Button variant="secondary" onClick={onShowWalletInfo}>
+    <Button width="100%" variant="secondary" onClick={onShowWalletInfo}>
       <Wrapper>
         <img width="16px" src="/images/metamask.png" />
         <Text>{helpers.formatTransactionHash(address, 8, 8)}</Text>
