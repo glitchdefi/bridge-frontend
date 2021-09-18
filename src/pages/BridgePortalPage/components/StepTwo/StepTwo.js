@@ -86,8 +86,32 @@ export function StepTwo({
 
       if (isBSCChain) {
         setIsLoading(true);
+
+        const allowance = await getAllowance({
+          walletUtils,
+          isETHtoBSC: false,
+          amount,
+        });
+
+        // Start transfer
+        if (allowance) {
+          handleTransfer({
+            toast,
+            walletUtils,
+            isETHtoBSC: false,
+            amount,
+            callback: ({ isSuccess }) => {
+              setIsLoading(false);
+              isSuccess && onSuccess();
+            },
+          });
+
+          return;
+        }
+
+        // Approve token
         approveTokenInMetamask({
-          dispatch,
+          toast,
           walletUtils,
           isETHtoBSC: false,
           amount,
