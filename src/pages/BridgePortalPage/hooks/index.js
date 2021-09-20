@@ -1,13 +1,10 @@
-import { ACTION_CONST, CHAIN_IDS } from "../../../constants";
+import { CHAIN_IDS } from "../../../constants";
 import { getStatusSwap } from "../../../redux/services/bridge.api";
-import { useToast } from "../../../hooks/useToast";
 import {
   BSC_GLITCH_ADDRESS,
   ETH_GLITCH_ADDRESS,
   BSC_BRIDGE_CONTRACT_ADDRESS,
   ETH_BRIDGE_CONTRACT_ADDRESS,
-  BSC_EXPLORER,
-  ETH_EXPLORER,
 } from "../../../_configs";
 
 export const approveTokenInMetamask = ({

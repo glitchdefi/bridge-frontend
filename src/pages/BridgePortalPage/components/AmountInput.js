@@ -48,7 +48,7 @@ export function AmountInput({ value, min, onChange }) {
     <>
       <Wrapper error={hasError}>
         <Flex className="input-wrapper">
-          <Flex>
+          <Flex flex="1">
             <img src="/images/small_logo.png" width="24px" />
             <StyledInput
               disabled={!isConnectWallet}
@@ -83,8 +83,6 @@ export function AmountInput({ value, min, onChange }) {
 
 const Wrapper = styled.div`
   margin-top: 16px;
-  padding-top: 16px;
-  padding-bottom: 16px;
   padding-left: 12px;
   padding-right: 12px;
   transition: all 0.5s;
@@ -118,6 +116,8 @@ const Wrapper = styled.div`
 
 const StyledInput = styled.input`
   flex: 1;
+  padding-top: 16px;
+  padding-bottom: 16px;
   margin-left: 12px;
   margin-right: 12px;
   background: transparent;

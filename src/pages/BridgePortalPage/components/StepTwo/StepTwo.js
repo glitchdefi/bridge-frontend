@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { get } from "lodash";
 
 // Hooks
@@ -28,7 +28,6 @@ export function StepTwo({
   inputNetwork,
   outputNetwork,
 }) {
-  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 

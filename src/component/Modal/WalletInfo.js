@@ -14,18 +14,22 @@ import { Flex } from "../Box";
 import { ACTION_CONST } from "../../constants";
 import { CloseIcon, CopyIcon } from "../Svg";
 import { Button } from "../Button";
+import { useLogout } from "../../hooks/useLogout";
 
 export function WalletInfo(props) {
   const dispatch = useDispatch();
   const clipboard = useClipboard({
     copiedTimeout: 600,
   });
+  const { onLogout } = useLogout();
 
   const walletAddress = useSelector((state) =>
     get(state, "utils.walletAddress", false)
   );
 
   const handleLogout = () => {
+    onLogout();
+    props.onHide();
     dispatch({
       type: ACTION_CONST.LOG_OUT_WALLET_SUCCESS,
     });

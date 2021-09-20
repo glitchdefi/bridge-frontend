@@ -12,6 +12,7 @@ import { NavBarToggler } from "./components/NavBarToggler";
 import { NavMenu } from "./components/NavMenu/NavMenu";
 import { WalletInfo } from "../Modal/WalletInfo";
 import { useConnectMetamask } from "../../hooks/useConnectMetamask";
+import { useLogout } from "../../hooks/useLogout";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -37,8 +38,12 @@ const Header = () => {
   );
 
   const onConnectMetamask = useConnectMetamask();
+  const { isUserLogout } = useLogout();
+
   useEffect(() => {
-    onConnectMetamask();
+    if (isUserLogout !== "true") {
+      onConnectMetamask();
+    }
   }, []);
 
   useEffect(() => {

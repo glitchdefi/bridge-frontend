@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { helpers } from "../../../../utils/helpers";
+import { numberWithCommas } from "../../../../utils/numbers";
 import { Button } from "../../../Button";
 import { Text } from "../../../Text";
 
@@ -9,7 +10,11 @@ export function Balance({ value }) {
     <Button width="100%" variant="secondary">
       <Wrapper>
         <img width="18px" src="/images/small_logo.png" />
-        <Text>{helpers.formatNumberDownRoundWithExtractMax(value, 8)}</Text>
+        <Text>
+          {numberWithCommas(
+            helpers.formatNumberDownRoundWithExtractMax(value, 8)
+          )}
+        </Text>
         <StyledPrefix color="#a8c2cb">GLCH</StyledPrefix>
       </Wrapper>
     </Button>
