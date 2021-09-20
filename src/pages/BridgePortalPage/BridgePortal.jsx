@@ -37,10 +37,10 @@ const BridgePortalPage = () => {
                   inputNetwork={inputNetwork}
                   outputNetwork={outputNetwork}
                   onBack={() => setCurrentStep(1)}
-                  onSuccess={() => {
+                  onSuccess={(inputNetwork, outputNetwork) => {
                     setAmount("");
-                    setInputNetwork(null);
-                    setOutputNetwork(null);
+                    setInputNetwork(inputNetwork);
+                    setOutputNetwork(outputNetwork);
                     setCurrentStep(1);
                   }}
                 />

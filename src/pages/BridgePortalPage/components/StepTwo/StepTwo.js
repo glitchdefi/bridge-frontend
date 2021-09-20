@@ -60,7 +60,7 @@ export function StepTwo({
               amount,
               callback: ({ isSuccess }) => {
                 setIsLoading(false);
-                isSuccess && onSuccess();
+                isSuccess && onSuccess(inputNetwork, outputNetwork);
               },
             });
 
@@ -101,7 +101,7 @@ export function StepTwo({
             amount,
             callback: ({ isSuccess }) => {
               setIsLoading(false);
-              isSuccess && onSuccess();
+              isSuccess && onSuccess(inputNetwork, outputNetwork);
             },
           });
 

@@ -13,7 +13,7 @@ import { Button } from "../../../../component/Button";
 import { AmountInput } from "../../components/AmountInput";
 import { WarningBox } from "../../components/WarningBox";
 import { ConnectWithMetamask } from "../../components/ConnectWithMetamask";
-import { Box, Flex } from "../../../../component/Box";
+import { Box } from "../../../../component/Box";
 import { TransferButton } from "../../components/TransferButton";
 import styled from "styled-components";
 
