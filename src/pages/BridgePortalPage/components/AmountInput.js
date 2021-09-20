@@ -22,26 +22,25 @@ export function AmountInput({ value, min, onChange }) {
   );
 
   useEffect(() => {
-    if (Number(amount) > 0) {
-      setHasError(Number(amount) < Number(min));
-      onChange(amount);
-    } else {
-      setHasError(false);
-    }
+    onChange(amount, hasError);
   }, [amount]);
 
   const onAmountChange = (e) => {
     const value = e.target.value;
+    const newValue = value?.includes(".") ? value?.split(".")[0] : value;
 
-    if (Number(value) > Number(glitchBalance)) {
-      setAmount(glitchBalance);
+    if (Number(newValue) < Number(min)) {
+      setHasError(true);
     } else {
-      setAmount(value);
+      setHasError(false);
     }
+
+    setAmount(Number(value) > Number(glitchBalance) ? glitchBalance : value);
   };
 
   const onMaxClick = () => {
     setAmount(glitchBalance);
+    hasError && setHasError(false);
   };
 
   return (

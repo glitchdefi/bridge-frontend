@@ -43,16 +43,13 @@ export function StepOne({ onNext, data }) {
     onNext && onNext({ amount, inputNetwork, outputNetwork });
   };
 
-  const onAmountChange = (amount) => {
-    if (
+  const onAmountChange = (amount, hasError) => {
+    const isEnable =
       Number(amount) >= Number(LIMIT_VALUE.MIN) &&
-      Number(amount) <= Number(LIMIT_VALUE.MAX)
-    ) {
-      setEnableTransfer(true);
-    } else {
-      setEnableTransfer(false);
-    }
+      Number(amount) <= Number(LIMIT_VALUE.MAX) &&
+      !hasError;
 
+    setEnableTransfer(isEnable);
     setAmount(amount);
   };
 
