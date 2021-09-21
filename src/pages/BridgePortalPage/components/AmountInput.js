@@ -100,6 +100,12 @@ export function AmountInput({ value, min, max, onChange }) {
           <Text color="#D32029">Amount is greater than max amount</Text>
         </Box>
       )}
+
+      {hasError.decimals && (
+        <Box pl="12px" mt="10px">
+          <Text color="#D32029">Cannot enter more than 18 decimal places.</Text>
+        </Box>
+      )}
     </>
   );
 }
