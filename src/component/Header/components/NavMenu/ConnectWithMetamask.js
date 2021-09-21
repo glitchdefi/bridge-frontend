@@ -1,5 +1,7 @@
 import React from "react";
 
+import { isMetamaskAvailable } from "../../../../utils/utils";
+
 // Components
 import { Flex } from "../../../Box";
 import { Button } from "../../../Button";
@@ -7,13 +9,17 @@ import { Text } from "../../../Text";
 import { useConnectMetamask } from "../../../../hooks/useConnectMetamask";
 import { USER_LOGOUT_KEY } from "../../../../hooks/useLogout";
 
-export function ConnectWithMetamask() {
+export function ConnectWithMetamask({ onShowInstallMetamaskModal }) {
   const onConnect = useConnectMetamask();
 
   return (
     <Button
       variant="secondary"
       onClick={() => {
+        if (!isMetamaskAvailable()) {
+          onShowInstallMetamaskModal();
+          return;
+        }
         window.localStorage.setItem(USER_LOGOUT_KEY, false);
         onConnect();
       }}

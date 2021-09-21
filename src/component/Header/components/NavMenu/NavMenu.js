@@ -13,6 +13,7 @@ export function NavMenu({
   walletAddress,
   currentNetWorkId,
   onShowWalletInfo,
+  onShowInstallMetamaskModal,
 }) {
   return (
     <StyledMenu
@@ -22,7 +23,9 @@ export function NavMenu({
       <StyledUl>
         {!isConnectWallet ? (
           <MenuItem>
-            <ConnectWithMetamask />
+            <ConnectWithMetamask
+              onShowInstallMetamaskModal={onShowInstallMetamaskModal}
+            />
           </MenuItem>
         ) : (
           <>

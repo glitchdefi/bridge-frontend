@@ -10,4 +10,10 @@ const StyledModal = styled(RBModal)`
   .modal-content {
     border-radius: 0px;
   }
+
+  @media (min-width: 576px) {
+    .modal-dialog {
+      max-width: 600px;
+    }
+  }
 `;

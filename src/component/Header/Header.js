@@ -13,7 +13,6 @@ import { NavMenu } from "./components/NavMenu/NavMenu";
 import { WalletInfo } from "../Modal/WalletInfo";
 import { useConnectMetamask } from "../../hooks/useConnectMetamask";
 import { useLogout } from "../../hooks/useLogout";
-import { isMetamaskAvailable } from "../../utils/utils";
 import { MetamaskNotDetectedModal } from "../Modal/MetamaskNotDetected";
 
 const Header = () => {
@@ -44,11 +43,6 @@ const Header = () => {
   const { isUserLogout } = useLogout();
 
   useEffect(() => {
-    if (!isMetamaskAvailable()) {
-      setShowMetamaskNotDetected(true);
-      return;
-    }
-
     if (isUserLogout !== "true") {
       onConnectMetamask();
     }
@@ -132,6 +126,7 @@ const Header = () => {
           walletAddress={walletAddress}
           currentNetWorkId={currentNetWorkId}
           onShowWalletInfo={() => setShowWalletInfo(true)}
+          onShowInstallMetamaskModal={() => setShowMetamaskNotDetected(true)}
         />
 
         {/* Modal */}
