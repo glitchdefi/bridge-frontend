@@ -16,6 +16,7 @@ import { ConnectWithMetamask } from "../../components/ConnectWithMetamask";
 import { Box } from "../../../../component/Box";
 import { TransferButton } from "../../components/TransferButton";
 import styled from "styled-components";
+import { MetamaskNotDetectedModal } from "../../../../component/Modal/MetamaskNotDetected";
 
 export function StepOne({ onNext, data }) {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ export function StepOne({ onNext, data }) {
     data?.outputNetwork || NETWORK_LIST[1]
   );
   const [enableTransfer, setEnableTransfer] = useState(false);
+  const [showMetamaskNotDetected, setShowMetamaskNotDetected] = useState(false);
 
   const connectedWallet = useSelector((state) =>
     get(state, "utils.isConnectWallet", false)
@@ -83,11 +85,20 @@ export function StepOne({ onNext, data }) {
 
       {/* Connect Wallet, Transfer Button */}
       <Box mt="24px">
-        {!connectedWallet && <ConnectWithMetamask />}
+        {!connectedWallet && (
+          <ConnectWithMetamask
+            onShowInstallMetamaskModal={() => setShowMetamaskNotDetected(true)}
+          />
+        )}
         {connectedWallet && (
           <TransferButton disabled={!enableTransfer} onClick={onTransfer} />
         )}
       </Box>
+
+      <MetamaskNotDetectedModal
+        show={showMetamaskNotDetected}
+        onHide={() => setShowMetamaskNotDetected(false)}
+      />
     </>
   );
 }
