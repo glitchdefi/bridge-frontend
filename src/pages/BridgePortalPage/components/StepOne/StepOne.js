@@ -73,6 +73,7 @@ export function StepOne({ onNext, data }) {
       {/* Amount Input */}
       <AmountInput
         min={LIMIT_VALUE.MIN}
+        max={LIMIT_VALUE.MAX}
         value={amount}
         onChange={onAmountChange}
       />

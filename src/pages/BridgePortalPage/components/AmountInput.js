@@ -9,9 +9,13 @@ import breakPoints from "../../../utils/breakPoints";
 import { Box, Flex } from "../../../component/Box";
 import { Text } from "../../../component/Text";
 
-export function AmountInput({ value, min, onChange }) {
+export function AmountInput({ value, min, max, onChange }) {
   const [amount, setAmount] = useState(value || "");
-  const [hasError, setHasError] = useState(false);
+  const [hasError, setHasError] = useState({
+    min: false,
+    max: false,
+    decimals: false,
+  });
 
   const isConnectWallet = useSelector((state) =>
     get(state, "utils.isConnectWallet", false)
@@ -22,30 +26,44 @@ export function AmountInput({ value, min, onChange }) {
   );
 
   useEffect(() => {
-    onChange(amount, hasError);
+    const error = hasError.min || hasError.decimals || hasError.max;
+    onChange(amount, error);
   }, [amount]);
 
   const onAmountChange = (e) => {
     const value = e.target.value;
+    // E.g: 100.888888888
     const newValue = value?.includes(".") ? value?.split(".")[0] : value;
 
-    if (Number(newValue) < Number(min)) {
-      setHasError(true);
+    const isMinError = newValue && Number(newValue) < Number(min);
+    const isMaxError =
+      value?.split(".")?.length > 0 &&
+      Number(newValue) === Number(max) &&
+      Number(value?.split(".")[1]) > 0;
+    const isDecimalsError =
+      value?.split(".")?.length > 0 && value?.split(".")[1]?.length > 18;
+
+    if (isMinError) {
+      setHasError({ ...hasError, min: true });
+    } else if (isDecimalsError) {
+      setHasError({ ...hasError, decimals: true });
+    } else if (isMaxError) {
+      setHasError({ ...hasError, max: true });
     } else {
-      setHasError(false);
+      setHasError({ min: false, max: false, decimals: false });
     }
 
     setAmount(Number(value) > Number(glitchBalance) ? glitchBalance : value);
   };
 
   const onMaxClick = () => {
+    setHasError({ min: false, max: false, decimals: false });
     setAmount(glitchBalance);
-    hasError && setHasError(false);
   };
 
   return (
     <>
-      <Wrapper error={hasError}>
+      <Wrapper error={hasError.min || hasError.decimals || hasError.max}>
         <Flex className="input-wrapper">
           <Flex flex="1">
             <img src="/images/small_logo.png" width="24px" />
@@ -71,9 +89,15 @@ export function AmountInput({ value, min, onChange }) {
       </Wrapper>
 
       {/* Error box */}
-      {hasError && (
+      {hasError.min && (
         <Box pl="12px" mt="10px">
           <Text color="#D32029">Amount is less than min amount</Text>
+        </Box>
+      )}
+
+      {hasError.max && (
+        <Box pl="12px" mt="10px">
+          <Text color="#D32029">Amount is greater than max amount</Text>
         </Box>
       )}
     </>
