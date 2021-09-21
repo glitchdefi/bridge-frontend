@@ -13,10 +13,13 @@ import { NavMenu } from "./components/NavMenu/NavMenu";
 import { WalletInfo } from "../Modal/WalletInfo";
 import { useConnectMetamask } from "../../hooks/useConnectMetamask";
 import { useLogout } from "../../hooks/useLogout";
+import { isMetamaskAvailable } from "../../utils/utils";
+import { MetamaskNotDetectedModal } from "../Modal/MetamaskNotDetected";
 
 const Header = () => {
   const dispatch = useDispatch();
   const [showWalletInfo, setShowWalletInfo] = useState(false);
+  const [showMetamaskNotDetected, setShowMetamaskNotDetected] = useState(false);
   const [glitchBalance, setGlitchBalance] = useState(0);
   const [amountBalance, setAmountBalance] = useState(0);
   const [init, setInit] = useState(true);
@@ -41,6 +44,11 @@ const Header = () => {
   const { isUserLogout } = useLogout();
 
   useEffect(() => {
+    if (!isMetamaskAvailable()) {
+      setShowMetamaskNotDetected(true);
+      return;
+    }
+
     if (isUserLogout !== "true") {
       onConnectMetamask();
     }
@@ -130,6 +138,11 @@ const Header = () => {
         <WalletInfo
           show={showWalletInfo}
           onHide={() => setShowWalletInfo(false)}
+        />
+
+        <MetamaskNotDetectedModal
+          show={showMetamaskNotDetected}
+          onHide={() => setShowMetamaskNotDetected(false)}
         />
       </StyledNav>
     </>

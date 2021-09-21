@@ -12,9 +12,11 @@ import { Text } from "../Text";
 import { Modal } from "./Base/Modal";
 import { Flex } from "../Box";
 import { ACTION_CONST } from "../../constants";
-import { CloseIcon, CopyIcon } from "../Svg";
+import { CopyIcon } from "../Svg";
 import { Button } from "../Button";
 import { useLogout } from "../../hooks/useLogout";
+import { ModalHeader } from "./Base/ModalHeader";
+import { ModalBody } from "./Base/ModalBody";
 
 export function WalletInfo(props) {
   const dispatch = useDispatch();
@@ -39,14 +41,7 @@ export function WalletInfo(props) {
 
   return (
     <Modal {...props} centered>
-      <ModalHeader>
-        <Flex alignItems="center" justifyContent="space-between">
-          <Text size="16px">Your Wallet</Text>
-          <Button onClick={props.onHide}>
-            <CloseIcon width="24px" color="#00FFFF" />
-          </Button>
-        </Flex>
-      </ModalHeader>
+      <ModalHeader title="Your Wallet" onClose={props.onHide} />
       <ModalBody>
         <Flex>
           <Text mr="12px" size="16px" bold>
@@ -88,7 +83,6 @@ export function WalletInfo(props) {
           </Button>
         </Flex>
       </ModalBody>
-
       <ModalFooter>
         <Button width="100%" onClick={handleLogout}>
           <Text color="#00FFFF">Logout</Text>
@@ -97,23 +91,6 @@ export function WalletInfo(props) {
     </Modal>
   );
 }
-
-const ModalHeader = styled.div`
-  padding: 1em;
-  text-align: center;
-  background-color: #1c2a2f;
-  border-bottom: 1px solid #23353b;
-`;
-
-const ModalBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1em;
-  padding-bottom: 2em;
-  background-color: #151f23;
-`;
 
 const ModalFooter = styled.div`
   border-top: 1px solid #23353b;
