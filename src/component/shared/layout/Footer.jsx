@@ -8,8 +8,10 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
   return (
     <>
+
       <div className="pp-footer">
         <div className="container">
+
           {/* <div className="text-center">
             <div className="pp-footer-social mb-2">
               <a href="#" target="_blank">
@@ -32,6 +34,10 @@ export default function Footer() {
             <div className="text-muted">Copyright © {currentYear}. All Rights Reserved by Glitch</div>
             <div className="text-muted"> v{packageJson.version}</div>
             <div className="text-right pp-footer-link">
+              <div class="p-footer-social">
+                <a href="mailto:support@glitch.finance"><img  src="https://img.icons8.com/fluent/2x/email-sign.png"/></a>
+                <a target="_blank" href="https://t.me/glitchbridge"><img src="https://img.icons8.com/color/2x/telegram-app.png"/></a>
+              </div>
               {/* <Link className="p-terms me-3" target="_blank" to={ROUTES.PRIVACY_POLICY}>Privacy Policy </Link> */}
               {/* <span className="mx-1">•</span> */}
               {/* <Link className="p-terms" target="_blank" to={ROUTES.TERMS_OF_USE}>Terms of Use </Link> */}
@@ -42,8 +48,8 @@ export default function Footer() {
       </div>
       <ConnectWalletModal />
 
-      <WalletModal/>
-    
+      <WalletModal />
+
     </>
   );
 }

@@ -35,6 +35,28 @@
             background-position: center;
             z-index: 999999;
         }
+
+        .p-footer-social {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+        }
+        
+        .p-footer-social a {
+            text-decoration: none;
+            transition: all ease-in-out .3s;
+            display: block;
+            margin-bottom: 3px;
+            opacity: .5;
+        }
+        
+        .p-footer-social a:hover {
+            opacity: 1;
+        }
+        
+        .p-footer-social a img {
+            width: 40px;
+        }
     </style>
 </head>
 
@@ -49,12 +71,12 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XKDR0TZF14"></script>
 
     <!-- Script use in main net -->
-    <!-- <script>
+    <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
         gtag('config', 'G-XKDR0TZF14');
-    </script> -->
+    </script>
 </body>
 
 </html>

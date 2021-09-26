@@ -30,7 +30,7 @@ export default class WalletExtensionUtils {
   }
 
   async connect(currentInputNetWork) {
-    //console.log("CONNECT BLOCKCHAIN_NETWORK==>", BLOCKCHAIN_NETWORK);
+    console.log("CONNECT BLOCKCHAIN_NETWORK==>", BLOCKCHAIN_NETWORK);
     let self = this;
 
     if (self.extensionName === extensionName.binanceExtension) {
@@ -66,11 +66,11 @@ export default class WalletExtensionUtils {
       self.extensionName === extensionName.trustWallet
     ) {
       if (window.ethereum) {
-        // //console.log("get window.ethereum");
+        // console.log("get window.ethereum");
         self.extension = window.ethereum;
         self.web3 = new Web3(window.ethereum);
 
-        // //console.log("window.ethereum enable");
+        // console.log("window.ethereum enable");
         await window.ethereum.enable();
 
         //check current network
@@ -123,7 +123,7 @@ export default class WalletExtensionUtils {
 
   accountsChanged(callback) {
     const self = this;
-    // //console.log(this.extension);
+    // console.log(this.extension);
 
     this.extension.on("accountsChanged", function (accounts) {
       self.address = accounts[0];
@@ -135,7 +135,7 @@ export default class WalletExtensionUtils {
     const self = this;
     // debugger;
     this.extension.on("chainChanged", function (chainId) {
-      //console.log("chainId==>", chainId);
+      console.log("chainId==>", chainId);
       self.extension = window.ethereum;
       self.web3 = new Web3(window.ethereum);
       callback(chainId);
@@ -172,7 +172,7 @@ export default class WalletExtensionUtils {
       const glitchBalance = await this.getTokenBalance(glitchAddress);
       return glitchBalance;
     } catch (error) {
-      //console.log(error);
+      console.log(error);
       return 0;
     }
   }
@@ -187,7 +187,7 @@ export default class WalletExtensionUtils {
 
       return this.fromWei(await contract.methods.swapFee().call());
     } catch (error) {
-      //console.log(error);
+      console.log(error);
       return null;
     }
   }
@@ -202,7 +202,7 @@ export default class WalletExtensionUtils {
 
       return this.fromWei(await contract.methods.swapFee().call());
     } catch (error) {
-      //console.log(error);
+      console.log(error);
       return null;
     }
   }
@@ -210,7 +210,7 @@ export default class WalletExtensionUtils {
   //call approve smart contract use token f user
   async approve({ tokenContractAddress, contractAddress, amount }, callback) {
     const self = this;
-    // //console.log("amount==>", amount);
+    // console.log("amount==>", amount);
     amount = calculateBalanceSend(amount);
     try {
       const tokenContract = new self.web3.eth.Contract(
@@ -221,7 +221,7 @@ export default class WalletExtensionUtils {
         status: "APPROVING",
       });
       const amountInHex = "0x" + amount.toString(16);
-      //console.log(amountInHex);
+      console.log(amountInHex);
       await tokenContract.methods
         .approve(contractAddress, amountInHex)
         .send({ from: self.address });
@@ -233,7 +233,7 @@ export default class WalletExtensionUtils {
       callback({
         status: "APPROVE_FAILS",
       });
-      //console.log(error);
+      console.log(error);
     }
   }
 
@@ -260,7 +260,7 @@ export default class WalletExtensionUtils {
           });
         })
         .on("error", (error) => {
-          //console.log(error);
+          console.log(error);
           callback({
             status: "SWAP_BSC_TO_ETH_FAIL",
           });
@@ -274,7 +274,7 @@ export default class WalletExtensionUtils {
           } else callback({ status: "SWAP_BSC_TO_ETH_FAIL" });
         })
         .catch((err) => {
-          //console.log(err);
+          console.log(err);
           callback({ status: "SWAP_BSC_TO_ETH_FAIL" });
         });
       return executeSwapResult;
@@ -308,7 +308,7 @@ export default class WalletExtensionUtils {
           });
         })
         .on("error", (error) => {
-          //console.log(error);
+          console.log(error);
           callback({
             status: "SWAP_ETH_TO_BSC_FAIL",
           });
@@ -322,7 +322,7 @@ export default class WalletExtensionUtils {
           } else callback({ status: "SWAP_ETH_TO_BSC_FAIL" });
         })
         .catch((err) => {
-          //console.log(err);
+          console.log(err);
           callback({ status: "SWAP_ETH_TO_BSC_FAIL" });
         });
       return executeSwapResult;
