@@ -6,7 +6,8 @@ import { Button } from "../../../Button";
 import { Text } from "../../../Text";
 
 export function WalletAddress({ address, currentNetWorkId, onShowWalletInfo }) {
-  const network = currentNetWorkId === 97 ? "bsc" : "eth";
+  const network =
+    currentNetWorkId === 97 || currentNetWorkId === 56 ? "bsc" : "eth";
 
   return (
     <Button width="100%" variant="secondary" onClick={onShowWalletInfo}>
