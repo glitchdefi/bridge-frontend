@@ -1,12 +1,10 @@
-import { combineReducers } from 'redux';
-import alert from './alert.reducer';
-import utils from './utils.reducer';
-import wallet from './wallet.reducer';
+import { combineReducers } from "redux";
+import utils from "./utils.reducer";
+import wallet from "./wallet.reducer";
+
 const reducers = combineReducers({
-    alert,
-    utils,
-    wallet
-    
+  utils,
+  wallet,
 });
 
 export default reducers;

@@ -3,11 +3,11 @@ import window from "global";
 import erc20Abi from "../contracts/erc20.abi";
 import ethSwapAbi from "../contracts/ETHSwapAgent.json";
 import bscSwapAbi from "../contracts/BSCSwapAgent.json";
-import { calculateBalanceSend, } from "./utils";
-import {helpers} from './helpers'
+import { calculateBalanceSend } from "./utils";
+import { helpers } from "./helpers";
 
 import { BigNumber } from "bignumber.js";
-import exactMath from 'exact-math';
+import exactMath from "exact-math";
 import { CHAIN_ID } from "../constants";
 import {
   BLOCKCHAIN_NETWORK,
@@ -19,8 +19,6 @@ import {
 import { CHAIN_IDS } from "../constants";
 
 import { extensionName } from "../constants/values";
-
-// console.log(BLOCKCHAIN_NETWORK);
 export default class WalletExtensionUtils {
   constructor(ex) {
     this.web3 = null;
@@ -34,7 +32,7 @@ export default class WalletExtensionUtils {
   async connect(currentInputNetWork) {
     console.log("CONNECT BLOCKCHAIN_NETWORK==>", BLOCKCHAIN_NETWORK);
     let self = this;
-    
+
     if (self.extensionName === extensionName.binanceExtension) {
       if (window.BinanceChain) {
         self.extension = window.BinanceChain;
@@ -48,7 +46,6 @@ export default class WalletExtensionUtils {
               Web3.utils.numberToHex(CHAIN_ID.ETH[BLOCKCHAIN_NETWORK])
           );
 
-  
           if (envCheck) {
             self.isWrongNetwork = true;
             return;
@@ -83,27 +80,27 @@ export default class WalletExtensionUtils {
           currentInputNetWork === "eth"
         ) {
           //connect with eth
-           envCheck =
-           !( window.ethereum.chainId ===
+          envCheck = !(
+            window.ethereum.chainId ===
               Web3.utils.numberToHex(CHAIN_ID.ETH[BLOCKCHAIN_NETWORK]) ||
             window.ethereum.chainId === CHAIN_ID.ETH[BLOCKCHAIN_NETWORK] ||
             window.ethereum.networkVersion ===
               CHAIN_ID.ETH[BLOCKCHAIN_NETWORK] ||
-            (!window.ethereum.chainId && !window.ethereum.networkVersion));
+            (!window.ethereum.chainId && !window.ethereum.networkVersion)
+          );
 
-          //   console.log("window.ethereum.chainId==>", window.ethereum.chainId);
-          //   console.log(" CHAIN_ID.ETH[BLOCKCHAIN_NETWORK]==>",  CHAIN_ID.ETH[BLOCKCHAIN_NETWORK]);
-           
+          //   //console.log("window.ethereum.chainId==>", window.ethereum.chainId);
+          //   //console.log(" CHAIN_ID.ETH[BLOCKCHAIN_NETWORK]==>",  CHAIN_ID.ETH[BLOCKCHAIN_NETWORK]);
+
           // debugger
         } else {
           //connect with bsc
-           envCheck = !(
+          envCheck = !(
             window.ethereum.chainId ===
               Web3.utils.numberToHex(CHAIN_ID.BSC[BLOCKCHAIN_NETWORK]) ||
             window.ethereum.chainId === CHAIN_ID.BSC[BLOCKCHAIN_NETWORK] ||
-            window.ethereum.networkVersion === CHAIN_ID.BSC[BLOCKCHAIN_NETWORK] 
+            window.ethereum.networkVersion === CHAIN_ID.BSC[BLOCKCHAIN_NETWORK]
           );
-       
         }
 
         if (envCheck) {
@@ -120,10 +117,8 @@ export default class WalletExtensionUtils {
         }
       } else throw new Error("Detect Wallet failed!");
 
-      return window.ethereum.chainId 
+      return window.ethereum.chainId;
     }
-
-    
   }
 
   accountsChanged(callback) {
@@ -159,20 +154,17 @@ export default class WalletExtensionUtils {
     return Number(window.ethereum.networkVersion);
   }
 
-
-
   async getTokenBalance(tokenAddress) {
     const tokenContract = new this.web3.eth.Contract(erc20Abi, tokenAddress);
 
     const tokenBalance = await tokenContract.methods
       .balanceOf(this.address)
       .call();
-      // debugger
-    return exactMath.div(Number(tokenBalance), exactMath.pow(10, 18))
+
+    return exactMath.div(Number(tokenBalance), exactMath.pow(10, 18));
   }
 
   async getGlitchBalance() {
-  
     try {
       const glitchAddress = CHAIN_IDS.eth.includes(this.getCurrentChainId())
         ? ETH_GLITCH_ADDRESS
@@ -253,8 +245,9 @@ export default class WalletExtensionUtils {
       bscSwapAbi,
       BSC_BRIDGE_CONTRACT_ADDRESS
     );
+
     const swapFee = await contract.methods.swapFee().call();
-    amount = this.calculateSendAmount(Number(amount));
+    amount = this.calculateSendAmount(amount);
 
     try {
       const executeSwapResult = await contract.methods
@@ -302,7 +295,7 @@ export default class WalletExtensionUtils {
       ETH_BRIDGE_CONTRACT_ADDRESS
     );
     const swapFee = await contract.methods.swapFee().call();
-    amount = this.calculateSendAmount(Number(amount));
+    amount = this.calculateSendAmount(amount);
 
     try {
       const executeSwapResult = await contract.methods
@@ -347,7 +340,6 @@ export default class WalletExtensionUtils {
     return this.address;
   }
 
-
   calculateSendAmount(amount) {
     return this.web3.utils.toWei(amount.toString(), "ether");
   }
@@ -356,13 +348,18 @@ export default class WalletExtensionUtils {
     return this.web3.utils.fromWei(amount.toString(), "ether");
   }
 
-  async getBalanceAccount (){
-   const symbol =  CHAIN_IDS.eth.includes(this.getCurrentChainId())?" ETH":" BNB"
-    const balance = await this.web3.eth.getBalance(this.address)
-    // debugger
-    
-     return helpers.formatNumberDownRoundWithExtractMax(this.fromWei(Number(balance)),8)  + symbol
-    
+  async getBalanceAccount() {
+    const symbol = CHAIN_IDS.eth.includes(this.getCurrentChainId())
+      ? " ETH"
+      : " BNB";
+    const balance = await this.web3.eth.getBalance(this.address);
+
+    return (
+      helpers.formatNumberDownRoundWithExtractMax(
+        this.fromWei(Number(balance)),
+        8
+      ) + symbol
+    );
   }
 
   //add function get getAllowance
@@ -372,11 +369,9 @@ export default class WalletExtensionUtils {
     const allocationNumber = await tokenContract.methods
       .allowance(this.address, contractAddress)
       .call();
-      // return exactMath.div(allocationNumber, exactMath.pow(10, 18))
-      return new BigNumber(allocationNumber.toString()).dividedBy(10 ** 18).toString()
-    // return parseFloat(allocationNumber / 10 ** 18);
+
+    return new BigNumber(allocationNumber.toString())
+      .dividedBy(10 ** 18)
+      .toString();
   }
-
 }
-
-

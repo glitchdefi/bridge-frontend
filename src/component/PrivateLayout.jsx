@@ -1,18 +1,14 @@
-import React from 'react';
-import Header from './shared/layout/Header';
-import Footer from './shared/layout/Footer';
+import React from "react";
+import { Header } from "./Header";
+import { Page } from "../app/layouts/Page";
 
-export const PrivateLayout = ({ children, ...rest }) => {
-
-
-    return (
-        <>
-
-            <Header />
-
-            {children}
-            <Footer />
-
-        </>
-    );
+export const PrivateLayout = ({ children }) => {
+  return (
+    <>
+      <Page>
+        <Header />
+        {children}
+      </Page>
+    </>
+  );
 };
