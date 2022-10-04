@@ -7,7 +7,7 @@ module.exports = {
     ETH_EXPLORER: 'https://ropsten.etherscan.io',
     // ETH_NODE_URL:
     //     'https://ropsten.infura.io/v3/f2473914890349138c8b03e3ef79d165/',
-    ETH_GLITCH_ADDRESS: '0xB176b2f01487a1A452e058f2b386a6eD30D38128',
+    ETH_GLITCH_ADDRESS: '0xb176b2f01487a1a452e058f2b386a6ed30d38128',
     ETH_BRIDGE_CONTRACT_ADDRESS: '0xfeA109179cC904C5CBdD4E4d569e222f60487340',
     BACK_END_URL: 'https://uat-bridge.glitch.finance'
 };
