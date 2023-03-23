@@ -8,7 +8,8 @@ import { history } from "./utils/history";
 import { ToastsProvider } from "./contexts/ToastsContext";
 import App from "./App";
 
-import "./styles/global-styles.css"
+import "react-tooltip/dist/react-tooltip.css";
+import "./styles/global-styles.css";
 
 const { store } = configureStore({}, history);
 
