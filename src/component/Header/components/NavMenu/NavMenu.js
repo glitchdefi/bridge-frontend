@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import breakPoints from "../../../../utils/breakPoints";
+import { Tooltip } from "react-tooltip";
 
 // Components
 import { Balance } from "./Balance";
 import { ConnectWithMetamask } from "./ConnectWithMetamask";
 import { WalletAddress } from "./WalletAddress";
+import { Button } from "../../../Button";
 
 export function NavMenu({
   isConnectWallet,
@@ -16,16 +18,27 @@ export function NavMenu({
   onShowInstallMetamaskModal,
 }) {
   return (
-    <StyledMenu
-      className="collapse navbar-collapse"
-      id="navbarSupportedContent"
-    >
+    <StyledMenu className="collapse navbar-collapse" id="navbarSupportedContent">
       <StyledUl>
+        <MenuItem>
+          <div className="voyager-wrapper">
+            <Button
+              variant="secondary"
+              as="a"
+              href="https://app.thevoyager.io"
+              target="_blank"
+              rel="noreferrer"
+              data-tooltip-id="cross-chain-swap__tooltip"
+              data-tooltip-content="Cross chain swap"
+            >
+              <img src="/images/voyager_logo.svg" alt="voyager-logo" />
+            </Button>
+            <Tooltip id="cross-chain-swap__tooltip" style={{ backgroundColor: "#151f23", color: "#fff" }} />
+          </div>
+        </MenuItem>
         {!isConnectWallet ? (
           <MenuItem>
-            <ConnectWithMetamask
-              onShowInstallMetamaskModal={onShowInstallMetamaskModal}
-            />
+            <ConnectWithMetamask onShowInstallMetamaskModal={onShowInstallMetamaskModal} />
           </MenuItem>
         ) : (
           <>
@@ -62,6 +75,21 @@ const StyledUl = styled.ul`
   list-style: none;
   margin: 0px;
   padding: 0px;
+
+  .voyager-wrapper {
+    .btn-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 33px;
+      > img {
+        width: 100px;
+        height: auto;
+        object-fit: contain;
+        margin-right: 0px;
+      }
+    }
+  }
 
   @media ${breakPoints.device.lg} {
     display: flex;
