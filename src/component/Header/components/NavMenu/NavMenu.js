@@ -16,6 +16,7 @@ export function NavMenu({
   currentNetWorkId,
   onShowWalletInfo,
   onShowInstallMetamaskModal,
+  onShowVoyagerWidget,
 }) {
   return (
     <StyledMenu className="collapse navbar-collapse" id="navbarSupportedContent">
@@ -24,12 +25,10 @@ export function NavMenu({
           <div className="voyager-wrapper">
             <Button
               variant="secondary"
-              as="a"
-              href="https://app.thevoyager.io"
-              target="_blank"
               rel="noreferrer"
               data-tooltip-id="cross-chain-swap__tooltip"
               data-tooltip-content="Cross chain swap"
+              onClick={onShowVoyagerWidget}
             >
               <img src="/images/voyager_logo.svg" alt="voyager-logo" />
             </Button>
