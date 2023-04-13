@@ -14,30 +14,22 @@ import { WalletInfo } from "../Modal/WalletInfo";
 import { useConnectMetamask } from "../../hooks/useConnectMetamask";
 import { useLogout } from "../../hooks/useLogout";
 import { MetamaskNotDetectedModal } from "../Modal/MetamaskNotDetected";
+import { VoyagerModal } from "./components/VoyagerModal";
 
 const Header = () => {
   const dispatch = useDispatch();
   const [showWalletInfo, setShowWalletInfo] = useState(false);
   const [showMetamaskNotDetected, setShowMetamaskNotDetected] = useState(false);
+  const [showVoyagerModal, setShowVoyagerModal] = useState(false);
   const [glitchBalance, setGlitchBalance] = useState(0);
   const [amountBalance, setAmountBalance] = useState(0);
   const [init, setInit] = useState(true);
 
-  const isConnectWallet = useSelector((state) =>
-    get(state, "utils.isConnectWallet", false)
-  );
-  const walletAddress = useSelector((state) =>
-    get(state, "utils.walletAddress", false)
-  );
-  const walletUtils = useSelector((state) =>
-    get(state, "utils.walletUtils", null)
-  );
-  const currentNetWork = useSelector((state) =>
-    get(state, "wallet.currentInputNetwork", "eth")
-  );
-  const currentNetWorkId = useSelector((state) =>
-    get(state, "wallet.currentNetWorkId", "")
-  );
+  const isConnectWallet = useSelector((state) => get(state, "utils.isConnectWallet", false));
+  const walletAddress = useSelector((state) => get(state, "utils.walletAddress", false));
+  const walletUtils = useSelector((state) => get(state, "utils.walletUtils", null));
+  const currentNetWork = useSelector((state) => get(state, "wallet.currentInputNetwork", "eth"));
+  const currentNetWorkId = useSelector((state) => get(state, "wallet.currentNetWorkId", ""));
 
   const onConnectMetamask = useConnectMetamask();
   const { isUserLogout } = useLogout();
@@ -127,18 +119,15 @@ const Header = () => {
           currentNetWorkId={currentNetWorkId}
           onShowWalletInfo={() => setShowWalletInfo(true)}
           onShowInstallMetamaskModal={() => setShowMetamaskNotDetected(true)}
+          onShowVoyagerWidget={() => setShowVoyagerModal(true)}
         />
 
         {/* Modal */}
-        <WalletInfo
-          show={showWalletInfo}
-          onHide={() => setShowWalletInfo(false)}
-        />
+        <WalletInfo show={showWalletInfo} onHide={() => setShowWalletInfo(false)} />
 
-        <MetamaskNotDetectedModal
-          show={showMetamaskNotDetected}
-          onHide={() => setShowMetamaskNotDetected(false)}
-        />
+        <MetamaskNotDetectedModal show={showMetamaskNotDetected} onHide={() => setShowMetamaskNotDetected(false)} />
+
+        <VoyagerModal show={showVoyagerModal} onHide={() => setShowVoyagerModal(false)} />
       </StyledNav>
     </>
   );
