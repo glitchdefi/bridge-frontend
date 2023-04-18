@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import breakPoints from "../../../../utils/breakPoints";
-import { Tooltip } from "react-tooltip";
+import { Text } from "../../../Text";
 
 // Components
 import { Balance } from "./Balance";
@@ -23,16 +23,11 @@ export function NavMenu({
       <StyledUl>
         <MenuItem>
           <div className="voyager-wrapper">
-            <Button
-              variant="secondary"
-              rel="noreferrer"
-              data-tooltip-id="cross-chain-swap__tooltip"
-              data-tooltip-content="Cross chain swap"
-              onClick={onShowVoyagerWidget}
-            >
-              <img src="/images/voyager_logo.svg" alt="voyager-logo" />
+            <Button variant="secondary" onClick={onShowVoyagerWidget}>
+              <Text color="#00FFFF" bold>
+                CROSS CHAIN SWAP
+              </Text>
             </Button>
-            <Tooltip id="cross-chain-swap__tooltip" style={{ backgroundColor: "#151f23", color: "#fff" }} />
           </div>
         </MenuItem>
         {!isConnectWallet ? (
