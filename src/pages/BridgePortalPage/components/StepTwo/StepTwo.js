@@ -4,13 +4,7 @@ import { useSelector } from "react-redux";
 import { get } from "lodash";
 
 // Hooks
-import {
-  IsEthereumChain,
-  IsBSCChain,
-  approveTokenInMetamask,
-  getAllowance,
-  handleTransfer,
-} from "../../hooks";
+import { IsEthereumChain, IsBSCChain, approveTokenInMetamask, getAllowance, handleTransfer } from "../../hooks";
 
 // Components
 import { Box, Flex } from "../../../../component/Box";
@@ -21,21 +15,13 @@ import { NetworkBox } from "../NetworkBox";
 import { Spinner } from "../../../../component/Loading/Spinner";
 import { useToast } from "../../../../hooks/useToast";
 
-export function StepTwo({
-  onBack,
-  onSuccess,
-  amount,
-  inputNetwork,
-  outputNetwork,
-}) {
+export function StepTwo({ onBack, onSuccess, amount, inputNetwork, outputNetwork }) {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
 
   const ethSwapFee = useSelector((state) => get(state, "utils.ethSwapFee", 0));
   const bscSwapFee = useSelector((state) => get(state, "utils.bscSwapFee", 0));
-  const walletUtils = useSelector((state) =>
-    get(state, "utils.walletUtils", null)
-  );
+  const walletUtils = useSelector((state) => get(state, "utils.walletUtils", null));
 
   const onConfirm = async () => {
     // Transfer ETH network -> BSC network
@@ -147,9 +133,9 @@ export function StepTwo({
 
       <Flex mt="16px">
         <Text color="#A7C1CA">Bridge fees:</Text>
-        <Text ml="12px">{`${
-          inputNetwork?.id === "eth" ? ethSwapFee : bscSwapFee
-        } ${inputNetwork?.id === "eth" ? "ETH" : "BNB"}`}</Text>
+        <Text ml="12px">{`${inputNetwork?.id === "eth" ? ethSwapFee : bscSwapFee} ${
+          inputNetwork?.id === "eth" ? "ETH" : "BNB"
+        }`}</Text>
       </Flex>
 
       <Box mt="16px">

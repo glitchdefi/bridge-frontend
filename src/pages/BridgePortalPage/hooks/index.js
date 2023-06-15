@@ -7,21 +7,11 @@ import {
   ETH_BRIDGE_CONTRACT_ADDRESS,
 } from "../../../_configs";
 
-export const approveTokenInMetamask = ({
-  toast,
-  walletUtils,
-  amount,
-  isETHtoBSC,
-  callback,
-}) => {
+export const approveTokenInMetamask = ({ toast, walletUtils, amount, isETHtoBSC, callback }) => {
   const { toastSuccess, toastError } = toast;
 
-  const tokenContractAddress = isETHtoBSC
-    ? ETH_GLITCH_ADDRESS
-    : BSC_GLITCH_ADDRESS;
-  const contractAddress = isETHtoBSC
-    ? ETH_BRIDGE_CONTRACT_ADDRESS
-    : BSC_BRIDGE_CONTRACT_ADDRESS;
+  const tokenContractAddress = isETHtoBSC ? ETH_GLITCH_ADDRESS : BSC_GLITCH_ADDRESS;
+  const contractAddress = isETHtoBSC ? ETH_BRIDGE_CONTRACT_ADDRESS : BSC_BRIDGE_CONTRACT_ADDRESS;
 
   walletUtils.approve(
     {
@@ -47,13 +37,7 @@ export const approveTokenInMetamask = ({
   );
 };
 
-export const handleTransfer = ({
-  toast,
-  walletUtils,
-  amount,
-  isETHtoBSC,
-  callback,
-}) => {
+export const handleTransfer = ({ toast, walletUtils, amount, isETHtoBSC, callback }) => {
   isETHtoBSC
     ? transferETHtoBSC(toast, walletUtils, amount, callback)
     : transferBSCtoETH(toast, walletUtils, amount, callback);
@@ -117,10 +101,7 @@ const transferBSCtoETH = (toast, walletUtils, amount, callback) => {
 const getStatus = (network, txID) => {
   getStatusSwap(network, txID).then((data) => {
     if (data) {
-      if (
-        data["status"].toLowerCase() === "completed" ||
-        data["status"].toLowerCase() === "fail"
-      ) {
+      if (data["status"].toLowerCase() === "completed" || data["status"].toLowerCase() === "fail") {
         console.log("error");
       }
     }
@@ -128,17 +109,10 @@ const getStatus = (network, txID) => {
 };
 
 export const getAllowance = async ({ walletUtils, isETHtoBSC, amount }) => {
-  const tokenContractAddress = isETHtoBSC
-    ? ETH_GLITCH_ADDRESS
-    : BSC_GLITCH_ADDRESS;
-  const contractAddress = isETHtoBSC
-    ? ETH_BRIDGE_CONTRACT_ADDRESS
-    : BSC_BRIDGE_CONTRACT_ADDRESS;
+  const tokenContractAddress = isETHtoBSC ? ETH_GLITCH_ADDRESS : BSC_GLITCH_ADDRESS;
+  const contractAddress = isETHtoBSC ? ETH_BRIDGE_CONTRACT_ADDRESS : BSC_BRIDGE_CONTRACT_ADDRESS;
 
-  const allowance = await walletUtils.getAllowance(
-    tokenContractAddress,
-    contractAddress
-  );
+  const allowance = await walletUtils.getAllowance(tokenContractAddress, contractAddress);
 
   if (Number(allowance) >= Number(amount)) {
     return true;

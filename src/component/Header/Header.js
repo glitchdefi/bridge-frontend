@@ -54,9 +54,7 @@ const Header = () => {
 
       walletUtils
         .getBalanceAccount()
-        .then((balance) => {
-          setAmountBalance(balance);
-        })
+        .then(setAmountBalance)
         .catch((err) => console.log(err));
       if (currentNetWork === "eth") {
         walletUtils.getEthSwapFee().then((data) => {
@@ -95,9 +93,7 @@ const Header = () => {
 
           walletUtils
             .getBalanceAccount()
-            .then((balance) => {
-              setAmountBalance(balance);
-            })
+            .then(setAmountBalance)
             .catch((err) => console.log(err));
         }, 3 * 1000);
         // set reducer getbalance
