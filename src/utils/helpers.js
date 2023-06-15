@@ -77,8 +77,7 @@ const convertTimeStampToDate = (t) => {
 };
 const roundUNWPrice = (num, e) => {
   if (typeof num === "string") return num;
-  if (num)
-    return Math.round(num * Math.pow(10, e)) / Math.pow(10, e).toString();
+  if (num) return Math.round(num * Math.pow(10, e)) / Math.pow(10, e).toString();
   return num;
 };
 const formatUnw = (amount) => {
@@ -115,18 +114,12 @@ const formatAmount = (amount, pow = 2) => {
 
 const formatTransactionHash = (str, start, end) => {
   if (!str) return;
-  return (
-    str.substring(0, start) +
-    "..." +
-    str.substring(str.length, str.length - end)
-  );
+  return str.substring(0, start) + "..." + str.substring(str.length, str.length - end);
 };
 
 const getDateDiff = (val) => {
   const now = new Date();
-  const date1 = new Date(
-    now.getMonth() + 1 + "/" + now.getDay() + "/" + now.getFullYear()
-  );
+  const date1 = new Date(now.getMonth() + 1 + "/" + now.getDay() + "/" + now.getFullYear());
   const date2 = new Date(val);
   const diffTime = Math.abs(date2 - date1);
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -161,10 +154,7 @@ const formatNumberDownRound = (number, decimal) => {
 
 const formatNumberDownRoundWithExtractMax = (number, decimal) => {
   return exactMath
-    .div(
-      exactMath.floor(exactMath.mul(number, exactMath.pow(10, decimal))),
-      exactMath.pow(10, decimal)
-    )
+    .div(exactMath.floor(exactMath.mul(number, exactMath.pow(10, decimal))), exactMath.pow(10, decimal))
     .toFixed(decimal);
 };
 

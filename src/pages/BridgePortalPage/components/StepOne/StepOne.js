@@ -21,18 +21,12 @@ import { MetamaskNotDetectedModal } from "../../../../component/Modal/MetamaskNo
 export function StepOne({ onNext, data }) {
   const dispatch = useDispatch();
   const [amount, setAmount] = useState(data?.amount || 0);
-  const [inputNetwork, setInputNetwork] = useState(
-    data?.inputNetwork || NETWORK_LIST[0]
-  );
-  const [outputNetwork, setOutputNetwork] = useState(
-    data?.outputNetwork || NETWORK_LIST[1]
-  );
+  const [inputNetwork, setInputNetwork] = useState(data?.inputNetwork || NETWORK_LIST[0]);
+  const [outputNetwork, setOutputNetwork] = useState(data?.outputNetwork || NETWORK_LIST[1]);
   const [enableTransfer, setEnableTransfer] = useState(false);
   const [showMetamaskNotDetected, setShowMetamaskNotDetected] = useState(false);
 
-  const connectedWallet = useSelector((state) =>
-    get(state, "utils.isConnectWallet", false)
-  );
+  const connectedWallet = useSelector((state) => get(state, "utils.isConnectWallet", false));
 
   useEffect(() => {
     dispatch({
@@ -47,9 +41,7 @@ export function StepOne({ onNext, data }) {
 
   const onAmountChange = (amount, hasError) => {
     const isEnable =
-      Number(amount) >= Number(LIMIT_VALUE.MIN) &&
-      Number(amount) <= Number(LIMIT_VALUE.MAX) &&
-      !hasError;
+      Number(amount) >= Number(LIMIT_VALUE.MIN) && Number(amount) <= Number(LIMIT_VALUE.MAX) && !hasError;
 
     setEnableTransfer(isEnable);
     setAmount(amount);
@@ -73,12 +65,7 @@ export function StepOne({ onNext, data }) {
       </NetworkWrapper>
 
       {/* Amount Input */}
-      <AmountInput
-        min={LIMIT_VALUE.MIN}
-        max={LIMIT_VALUE.MAX}
-        value={amount}
-        onChange={onAmountChange}
-      />
+      <AmountInput min={LIMIT_VALUE.MIN} max={LIMIT_VALUE.MAX} value={amount} onChange={onAmountChange} />
 
       {/* Warning minimum & maximum */}
       <WarningBox min={LIMIT_VALUE.MIN} max={LIMIT_VALUE.MAX} />
@@ -86,19 +73,12 @@ export function StepOne({ onNext, data }) {
       {/* Connect Wallet, Transfer Button */}
       <Box mt="24px">
         {!connectedWallet && (
-          <ConnectWithMetamask
-            onShowInstallMetamaskModal={() => setShowMetamaskNotDetected(true)}
-          />
+          <ConnectWithMetamask onShowInstallMetamaskModal={() => setShowMetamaskNotDetected(true)} />
         )}
-        {connectedWallet && (
-          <TransferButton disabled={!enableTransfer} onClick={onTransfer} />
-        )}
+        {connectedWallet && <TransferButton disabled={!enableTransfer} onClick={onTransfer} />}
       </Box>
 
-      <MetamaskNotDetectedModal
-        show={showMetamaskNotDetected}
-        onHide={() => setShowMetamaskNotDetected(false)}
-      />
+      <MetamaskNotDetectedModal show={showMetamaskNotDetected} onHide={() => setShowMetamaskNotDetected(false)} />
     </>
   );
 }

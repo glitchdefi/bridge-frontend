@@ -17,13 +17,8 @@ export function AmountInput({ value, min, max, onChange }) {
     decimals: false,
   });
 
-  const isConnectWallet = useSelector((state) =>
-    get(state, "utils.isConnectWallet", false)
-  );
-
-  const glitchBalance = useSelector((state) =>
-    get(state, "utils.glitchBalance", 0)
-  );
+  const isConnectWallet = useSelector((state) => get(state, "utils.isConnectWallet", false));
+  const glitchBalance = useSelector((state) => get(state, "utils.glitchBalance", 0));
 
   useEffect(() => {
     const error = hasError.min || hasError.decimals || hasError.max;
@@ -37,11 +32,9 @@ export function AmountInput({ value, min, max, onChange }) {
 
     const isMinError = newValue && Number(newValue) < Number(min);
     const isMaxError =
-      value?.split(".")?.length > 0 &&
-      Number(newValue) === Number(max) &&
-      Number(value?.split(".")[1]) > 0;
-    const isDecimalsError =
-      value?.split(".")?.length > 0 && value?.split(".")[1]?.length > 18;
+      (value?.split(".")?.length > 0 && Number(newValue) === Number(max) && Number(value?.split(".")[1]) > 0) ||
+      Number(newValue) > Number(max);
+    const isDecimalsError = value?.split(".")?.length > 0 && value?.split(".")[1]?.length > 18;
 
     if (isMinError) {
       setHasError({ ...hasError, min: true });
@@ -60,7 +53,6 @@ export function AmountInput({ value, min, max, onChange }) {
     setHasError({ min: false, max: false, decimals: false });
     setAmount(glitchBalance);
   };
-
   return (
     <>
       <Wrapper error={hasError.min || hasError.decimals || hasError.max}>

@@ -40,10 +40,8 @@ export default class WalletExtensionUtils {
 
         try {
           const envCheck = !(
-            window.BinanceChain.chainId ===
-              Web3.utils.numberToHex(CHAIN_ID.BSC[BLOCKCHAIN_NETWORK]) ||
-            window.BinanceChain.chainId ===
-              Web3.utils.numberToHex(CHAIN_ID.ETH[BLOCKCHAIN_NETWORK])
+            window.BinanceChain.chainId === Web3.utils.numberToHex(CHAIN_ID.BSC[BLOCKCHAIN_NETWORK]) ||
+            window.BinanceChain.chainId === Web3.utils.numberToHex(CHAIN_ID.ETH[BLOCKCHAIN_NETWORK])
           );
 
           if (envCheck) {
@@ -61,10 +59,7 @@ export default class WalletExtensionUtils {
       } else throw new Error("Detect Binance Extension failed!");
 
       return window.BinanceChain.chainId;
-    } else if (
-      self.extensionName === extensionName.metamask ||
-      self.extensionName === extensionName.trustWallet
-    ) {
+    } else if (self.extensionName === extensionName.metamask || self.extensionName === extensionName.trustWallet) {
       if (window.ethereum) {
         // console.log("get window.ethereum");
         self.extension = window.ethereum;
@@ -75,17 +70,12 @@ export default class WalletExtensionUtils {
 
         //check current network
         let envCheck;
-        if (
-          typeof currentInputNetWork === "string" &&
-          currentInputNetWork === "eth"
-        ) {
+        if (typeof currentInputNetWork === "string" && currentInputNetWork === "eth") {
           //connect with eth
           envCheck = !(
-            window.ethereum.chainId ===
-              Web3.utils.numberToHex(CHAIN_ID.ETH[BLOCKCHAIN_NETWORK]) ||
+            window.ethereum.chainId === Web3.utils.numberToHex(CHAIN_ID.ETH[BLOCKCHAIN_NETWORK]) ||
             window.ethereum.chainId === CHAIN_ID.ETH[BLOCKCHAIN_NETWORK] ||
-            window.ethereum.networkVersion ===
-              CHAIN_ID.ETH[BLOCKCHAIN_NETWORK] ||
+            window.ethereum.networkVersion === CHAIN_ID.ETH[BLOCKCHAIN_NETWORK] ||
             (!window.ethereum.chainId && !window.ethereum.networkVersion)
           );
 
@@ -96,8 +86,7 @@ export default class WalletExtensionUtils {
         } else {
           //connect with bsc
           envCheck = !(
-            window.ethereum.chainId ===
-              Web3.utils.numberToHex(CHAIN_ID.BSC[BLOCKCHAIN_NETWORK]) ||
+            window.ethereum.chainId === Web3.utils.numberToHex(CHAIN_ID.BSC[BLOCKCHAIN_NETWORK]) ||
             window.ethereum.chainId === CHAIN_ID.BSC[BLOCKCHAIN_NETWORK] ||
             window.ethereum.networkVersion === CHAIN_ID.BSC[BLOCKCHAIN_NETWORK]
           );
@@ -156,19 +145,13 @@ export default class WalletExtensionUtils {
 
   async getTokenBalance(tokenAddress) {
     const tokenContract = new this.web3.eth.Contract(erc20Abi, tokenAddress);
-
-    const tokenBalance = await tokenContract.methods
-      .balanceOf(this.address)
-      .call();
-
-    return exactMath.div(Number(tokenBalance), exactMath.pow(10, 18));
+    const tokenBalance = await tokenContract.methods.balanceOf(this.address).call();
+    return this.fromWei(tokenBalance);
   }
 
   async getGlitchBalance() {
     try {
-      const glitchAddress = CHAIN_IDS.eth.includes(this.getCurrentChainId())
-        ? ETH_GLITCH_ADDRESS
-        : BSC_GLITCH_ADDRESS;
+      const glitchAddress = CHAIN_IDS.eth.includes(this.getCurrentChainId()) ? ETH_GLITCH_ADDRESS : BSC_GLITCH_ADDRESS;
       const glitchBalance = await this.getTokenBalance(glitchAddress);
       return glitchBalance;
     } catch (error) {
@@ -180,10 +163,7 @@ export default class WalletExtensionUtils {
   async getEthSwapFee() {
     // debugger;
     try {
-      const contract = new this.web3.eth.Contract(
-        ethSwapAbi,
-        ETH_BRIDGE_CONTRACT_ADDRESS
-      );
+      const contract = new this.web3.eth.Contract(ethSwapAbi, ETH_BRIDGE_CONTRACT_ADDRESS);
 
       return this.fromWei(await contract.methods.swapFee().call());
     } catch (error) {
@@ -195,10 +175,7 @@ export default class WalletExtensionUtils {
   async getBscSwapFee() {
     // debugger;
     try {
-      const contract = new this.web3.eth.Contract(
-        bscSwapAbi,
-        BSC_BRIDGE_CONTRACT_ADDRESS
-      );
+      const contract = new this.web3.eth.Contract(bscSwapAbi, BSC_BRIDGE_CONTRACT_ADDRESS);
 
       return this.fromWei(await contract.methods.swapFee().call());
     } catch (error) {
@@ -210,22 +187,15 @@ export default class WalletExtensionUtils {
   //call approve smart contract use token f user
   async approve({ tokenContractAddress, contractAddress, amount }, callback) {
     const self = this;
-    // console.log("amount==>", amount);
+
     amount = calculateBalanceSend(amount);
     try {
-      const tokenContract = new self.web3.eth.Contract(
-        erc20Abi,
-        tokenContractAddress
-      );
+      const tokenContract = new self.web3.eth.Contract(erc20Abi, tokenContractAddress);
       callback({
         status: "APPROVING",
       });
       const amountInHex = "0x" + amount.toString(16);
-      console.log(amountInHex);
-      await tokenContract.methods
-        .approve(contractAddress, amountInHex)
-        .send({ from: self.address });
-      // }
+      await tokenContract.methods.approve(contractAddress, amountInHex).send({ from: self.address });
       callback({
         status: "APPROVED",
       });
@@ -241,10 +211,7 @@ export default class WalletExtensionUtils {
   async swapBSCtoETH({ amount }, callback) {
     const self = this;
 
-    const contract = new self.web3.eth.Contract(
-      bscSwapAbi,
-      BSC_BRIDGE_CONTRACT_ADDRESS
-    );
+    const contract = new self.web3.eth.Contract(bscSwapAbi, BSC_BRIDGE_CONTRACT_ADDRESS);
 
     const swapFee = await contract.methods.swapFee().call();
     amount = this.calculateSendAmount(amount);
@@ -290,10 +257,7 @@ export default class WalletExtensionUtils {
   async swapETHtoBSC({ amount }, callback) {
     const self = this;
 
-    const contract = new self.web3.eth.Contract(
-      ethSwapAbi,
-      ETH_BRIDGE_CONTRACT_ADDRESS
-    );
+    const contract = new self.web3.eth.Contract(ethSwapAbi, ETH_BRIDGE_CONTRACT_ADDRESS);
     const swapFee = await contract.methods.swapFee().call();
     amount = this.calculateSendAmount(amount);
 
@@ -349,29 +313,15 @@ export default class WalletExtensionUtils {
   }
 
   async getBalanceAccount() {
-    const symbol = CHAIN_IDS.eth.includes(this.getCurrentChainId())
-      ? " ETH"
-      : " BNB";
+    const symbol = CHAIN_IDS.eth.includes(this.getCurrentChainId()) ? " ETH" : " BNB";
     const balance = await this.web3.eth.getBalance(this.address);
-
-    return (
-      helpers.formatNumberDownRoundWithExtractMax(
-        this.fromWei(Number(balance)),
-        8
-      ) + symbol
-    );
+    return helpers.formatNumberDownRoundWithExtractMax(this.fromWei(balance), 8) + symbol;
   }
 
   //add function get getAllowance
   async getAllowance(tokenAddress, contractAddress) {
     const tokenContract = new this.web3.eth.Contract(erc20Abi, tokenAddress);
-
-    const allocationNumber = await tokenContract.methods
-      .allowance(this.address, contractAddress)
-      .call();
-
-    return new BigNumber(allocationNumber.toString())
-      .dividedBy(10 ** 18)
-      .toString();
+    const allocationNumber = await tokenContract.methods.allowance(this.address, contractAddress).call();
+    return new BigNumber(allocationNumber.toString()).dividedBy(10 ** 18).toString();
   }
 }
